@@ -54,17 +54,17 @@ final class DefaultPrinter
     /**
      * The output instance.
      */
-    private ConsoleOutput $output;
+    private readonly ConsoleOutput $output;
 
     /**
      * The state instance.
      */
-    private State $state;
+    private readonly State $state;
 
     /**
      * The style instance.
      */
-    private Style $style;
+    private readonly Style $style;
 
     /**
      * If the printer should be compact.
@@ -152,7 +152,7 @@ final class DefaultPrinter
     /**
      * Listen to the runner execution started event.
      */
-    public function testRunnerExecutionStarted(ExecutionStarted $executionStarted): void
+    public function testRunnerExecutionStarted(): void
     {
         // ..
     }
@@ -180,9 +180,7 @@ final class DefaultPrinter
             $this->profileSlowTests[$event->test()->id()] = $result;
 
             // Sort the slow tests by time, and keep only 10 of them.
-            uasort($this->profileSlowTests, static function (TestResult $a, TestResult $b) {
-                return $b->duration <=> $a->duration;
-            });
+            uasort($this->profileSlowTests, static fn(TestResult $a, TestResult $b) => $b->duration <=> $a->duration);
 
             $this->profileSlowTests = array_slice($this->profileSlowTests, 0, 10);
         }

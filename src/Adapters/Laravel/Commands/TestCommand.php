@@ -53,8 +53,6 @@ class TestCommand extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -116,7 +114,7 @@ class TestCommand extends Command
         $exitCode = 1;
 
         try {
-            $exitCode = $process->run(function ($type, $line) {
+            $exitCode = $process->run(function ($type, $line): void {
                 $this->output->write($line);
             });
         } catch (ProcessSignaledException $e) {
@@ -212,17 +210,15 @@ class TestCommand extends Command
     {
         $options = array_merge(['--no-output'], $options);
 
-        $options = array_values(array_filter($options, function ($option) {
-            return ! Str::startsWith($option, '--env=')
-                && $option != '-q'
-                && $option != '--quiet'
-                && $option != '--coverage'
-                && $option != '--compact'
-                && $option != '--profile'
-                && $option != '--ansi'
-                && $option != '--no-ansi'
-                && ! Str::startsWith($option, '--min');
-        }));
+        $options = array_values(array_filter($options, fn($option) => ! Str::startsWith($option, '--env=')
+            && $option != '-q'
+            && $option != '--quiet'
+            && $option != '--coverage'
+            && $option != '--compact'
+            && $option != '--profile'
+            && $option != '--ansi'
+            && $option != '--no-ansi'
+            && ! Str::startsWith($option, '--min')));
 
         return array_merge($this->commonArguments(), ['--configuration='.$this->getConfigurationFile()], $options);
     }
@@ -235,7 +231,7 @@ class TestCommand extends Command
     protected function getConfigurationFile()
     {
         if (! file_exists($file = base_path('phpunit.xml'))) {
-            $file = base_path('phpunit.xml.dist');
+            return base_path('phpunit.xml.dist');
         }
 
         return $file;
@@ -249,21 +245,19 @@ class TestCommand extends Command
      */
     protected function paratestArguments($options)
     {
-        $options = array_values(array_filter($options, function ($option) {
-            return ! Str::startsWith($option, '--env=')
-                && $option != '--coverage'
-                && $option != '-q'
-                && $option != '--quiet'
-                && $option != '--ansi'
-                && $option != '--no-ansi'
-                && ! Str::startsWith($option, '--min')
-                && ! Str::startsWith($option, '-p')
-                && ! Str::startsWith($option, '--compact')
-                && ! Str::startsWith($option, '--parallel')
-                && ! Str::startsWith($option, '--recreate-databases')
-                && ! Str::startsWith($option, '--drop-databases')
-                && ! Str::startsWith($option, '--without-databases');
-        }));
+        $options = array_values(array_filter($options, fn($option) => ! Str::startsWith($option, '--env=')
+            && $option != '--coverage'
+            && $option != '-q'
+            && $option != '--quiet'
+            && $option != '--ansi'
+            && $option != '--no-ansi'
+            && ! Str::startsWith($option, '--min')
+            && ! Str::startsWith($option, '-p')
+            && ! Str::startsWith($option, '--compact')
+            && ! Str::startsWith($option, '--parallel')
+            && ! Str::startsWith($option, '--recreate-databases')
+            && ! Str::startsWith($option, '--drop-databases')
+            && ! Str::startsWith($option, '--without-databases')));
 
         $options = array_merge($this->commonArguments(), [
             '--configuration='.$this->getConfigurationFile(),
@@ -362,7 +356,7 @@ class TestCommand extends Command
                 ->addName($file)
                 ->make()
                 ->read();
-        } catch (InvalidPathException $e) {
+        } catch (InvalidPathException) {
             return [];
         }
 

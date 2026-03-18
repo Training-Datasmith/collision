@@ -21,16 +21,15 @@ use NunoMaduro\Collision\Adapters\Phpunit\Printers\ReportablePrinter;
 abstract class Subscriber
 {
     /**
-     * The printer instance.
-     */
-    private ReportablePrinter $printer;
-
-    /**
      * Creates a new subscriber.
      */
-    public function __construct(ReportablePrinter $printer)
+    public function __construct(
+        /**
+         * The printer instance.
+         */
+        private readonly ReportablePrinter $printer
+    )
     {
-        $this->printer = $printer;
     }
 
     /**

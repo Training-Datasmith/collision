@@ -36,48 +36,17 @@ final class TestResult
 
     public const PASS = 'passed';
 
-    public string $id;
-
-    public string $testCaseName;
-
-    public string $description;
-
-    public string $type;
-
-    public string $compactIcon;
-
-    public string $icon;
-
-    public string $compactColor;
-
-    public string $color;
-
     public float $duration;
-
-    public ?Throwable $throwable;
 
     public string $warning = '';
 
     public string $warningSource = '';
 
-    public array $context;
-
     /**
      * Creates a new TestResult instance.
      */
-    private function __construct(string $id, string $testCaseName, string $description, string $type, string $icon, string $compactIcon, string $color, string $compactColor, array $context, ?Throwable $throwable = null)
+    private function __construct(public string $id, public string $testCaseName, public string $description, public string $type, public string $icon, public string $compactIcon, public string $color, public string $compactColor, public array $context, public ?Throwable $throwable = null)
     {
-        $this->id = $id;
-        $this->testCaseName = $testCaseName;
-        $this->description = $description;
-        $this->type = $type;
-        $this->icon = $icon;
-        $this->compactIcon = $compactIcon;
-        $this->color = $color;
-        $this->compactColor = $compactColor;
-        $this->throwable = $throwable;
-        $this->context = $context;
-
         $this->duration = 0.0;
 
         $asWarning = $this->type === TestResult::WARN
@@ -87,10 +56,10 @@ final class TestResult
             || $this->type === TestResult::NOTICE
             || $this->type === TestResult::INCOMPLETE;
 
-        if ($throwable instanceof Throwable && $asWarning) {
+        if ($this->throwable instanceof Throwable && $asWarning) {
             if (in_array($this->type, [TestResult::DEPRECATED, TestResult::NOTICE])) {
-                foreach (explode("\n", $throwable->stackTrace()) as $line) {
-                    if (strpos($line, 'vendor/nunomaduro/collision') === false) {
+                foreach (explode("\n", $this->throwable->stackTrace()) as $line) {
+                    if (!str_contains($line, 'vendor/nunomaduro/collision')) {
                         $this->warningSource = str_replace(getcwd().'/', '', $line);
 
                         break;
@@ -98,7 +67,7 @@ final class TestResult
                 }
             }
 
-            $this->warning .= trim((string) preg_replace("/\r|\n/", ' ', $throwable->message()));
+            $this->warning .= trim((string) preg_replace("/\r|\n/", ' ', $this->throwable->message()));
 
             // pest specific
             $this->warning = str_replace('__pest_evaluable_', '', $this->warning);
@@ -230,25 +199,15 @@ final class TestResult
      */
     public static function makeIcon(string $type): string
     {
-        switch ($type) {
-            case self::FAIL:
-                return '⨯';
-            case self::SKIPPED:
-                return '-';
-            case self::DEPRECATED:
-            case self::WARN:
-            case self::RISKY:
-            case self::NOTICE:
-                return '!';
-            case self::INCOMPLETE:
-                return '…';
-            case self::TODO:
-                return '↓';
-            case self::RUNS:
-                return '•';
-            default:
-                return '✓';
-        }
+        return match ($type) {
+            self::FAIL => '⨯',
+            self::SKIPPED => '-',
+            self::DEPRECATED, self::WARN, self::RISKY, self::NOTICE => '!',
+            self::INCOMPLETE => '…',
+            self::TODO => '↓',
+            self::RUNS => '•',
+            default => '✓',
+        };
     }
 
     /**
@@ -256,25 +215,15 @@ final class TestResult
      */
     public static function makeCompactIcon(string $type): string
     {
-        switch ($type) {
-            case self::FAIL:
-                return '⨯';
-            case self::SKIPPED:
-                return 's';
-            case self::DEPRECATED:
-            case self::NOTICE:
-            case self::WARN:
-            case self::RISKY:
-                return '!';
-            case self::INCOMPLETE:
-                return 'i';
-            case self::TODO:
-                return 't';
-            case self::RUNS:
-                return '•';
-            default:
-                return '.';
-        }
+        return match ($type) {
+            self::FAIL => '⨯',
+            self::SKIPPED => 's',
+            self::DEPRECATED, self::NOTICE, self::WARN, self::RISKY => '!',
+            self::INCOMPLETE => 'i',
+            self::TODO => 't',
+            self::RUNS => '•',
+            default => '.',
+        };
     }
 
     /**
@@ -282,22 +231,12 @@ final class TestResult
      */
     public static function makeCompactColor(string $type): string
     {
-        switch ($type) {
-            case self::FAIL:
-                return 'red';
-            case self::DEPRECATED:
-            case self::NOTICE:
-            case self::SKIPPED:
-            case self::INCOMPLETE:
-            case self::RISKY:
-            case self::WARN:
-            case self::RUNS:
-                return 'yellow';
-            case self::TODO:
-                return 'cyan';
-            default:
-                return 'gray';
-        }
+        return match ($type) {
+            self::FAIL => 'red',
+            self::DEPRECATED, self::NOTICE, self::SKIPPED, self::INCOMPLETE, self::RISKY, self::WARN, self::RUNS => 'yellow',
+            self::TODO => 'cyan',
+            default => 'gray',
+        };
     }
 
     /**
@@ -305,21 +244,11 @@ final class TestResult
      */
     public static function makeColor(string $type): string
     {
-        switch ($type) {
-            case self::TODO:
-                return 'cyan';
-            case self::FAIL:
-                return 'red';
-            case self::DEPRECATED:
-            case self::NOTICE:
-            case self::SKIPPED:
-            case self::INCOMPLETE:
-            case self::RISKY:
-            case self::WARN:
-            case self::RUNS:
-                return 'yellow';
-            default:
-                return 'green';
-        }
+        return match ($type) {
+            self::TODO => 'cyan',
+            self::FAIL => 'red',
+            self::DEPRECATED, self::NOTICE, self::SKIPPED, self::INCOMPLETE, self::RISKY, self::WARN, self::RUNS => 'yellow',
+            default => 'green',
+        };
     }
 }

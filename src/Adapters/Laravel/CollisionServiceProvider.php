@@ -41,7 +41,7 @@ class CollisionServiceProvider extends ServiceProvider
     public function register(): void
     {
         if ($this->app->runningInConsole() && ! $this->app->runningUnitTests()) {
-            $this->app->bind(Provider::class, function () {
+            $this->app->bind(Provider::class, function (): \NunoMaduro\Collision\Provider {
                 if ($this->app->has(SolutionProviderRepository::class)) { // @phpstan-ignore-line
                     /** @var SolutionProviderRepository $solutionProviderRepository */
                     $solutionProviderRepository = $this->app->get(SolutionProviderRepository::class); // @phpstan-ignore-line
@@ -62,9 +62,7 @@ class CollisionServiceProvider extends ServiceProvider
 
             $this->app->singleton(
                 ExceptionHandlerContract::class,
-                function ($app) use ($appExceptionHandler) {
-                    return new ExceptionHandler($app, $appExceptionHandler);
-                }
+                fn($app) => new ExceptionHandler($app, $appExceptionHandler)
             );
         }
     }

@@ -53,7 +53,7 @@ final class Highlighter
         self::LINE_NUMBER_DIVIDER => ['dark_gray'],
     ];
 
-    private ConsoleColor $color;
+    private readonly ConsoleColor $color;
 
     private const DEFAULT_THEME = [
         self::TOKEN_STRING => 'red',
@@ -211,7 +211,7 @@ final class Highlighter
 
         $line = [];
         foreach ($tokens as $token) {
-            foreach (explode("\n", $token[1]) as $count => $tokenLine) {
+            foreach (explode("\n", (string) $token[1]) as $count => $tokenLine) {
                 if ($count > 0) {
                     $lines[] = $line;
                     $line = [];

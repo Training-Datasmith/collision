@@ -107,9 +107,7 @@ class ConsoleColor
             }
         }
 
-        $sequences = array_filter($sequences, function ($val) {
-            return $val !== null;
-        });
+        $sequences = array_filter($sequences, fn($val) => $val !== null);
 
         if (empty($sequences)) {
             return $text;
@@ -189,7 +187,7 @@ class ConsoleColor
             return function_exists('sapi_windows_vt100_support') && @sapi_windows_vt100_support(STDOUT);
         }
 
-        return strpos((string) getenv('TERM'), '256color') !== false;
+        return str_contains((string) getenv('TERM'), '256color');
     }
 
     public function getPossibleStyles(): array

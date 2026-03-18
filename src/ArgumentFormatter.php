@@ -29,7 +29,7 @@ final class ArgumentFormatter
                     }
                     break;
                 case is_object($argument):
-                    $class = get_class($argument);
+                    $class = $argument::class;
                     $result[] = "Object($class)";
                     break;
             }

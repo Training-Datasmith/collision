@@ -17,7 +17,7 @@ final class Handler extends AbstractHandler
     /**
      * Holds an instance of the writer.
      */
-    private Writer $writer;
+    private readonly Writer $writer;
 
     /**
      * Creates an instance of the Handler.

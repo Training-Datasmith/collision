@@ -11,12 +11,12 @@ use Throwable;
  *
  * @mixin DefaultPrinter
  */
-final class ReportablePrinter
+final readonly class ReportablePrinter
 {
     /**
      * Creates a new Printer instance.
      */
-    public function __construct(private readonly DefaultPrinter $printer)
+    public function __construct(private DefaultPrinter $printer)
     {
         // ..
     }

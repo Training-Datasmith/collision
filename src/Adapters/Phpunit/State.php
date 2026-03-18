@@ -147,9 +147,7 @@ final class State
      */
     public function todosCount(): int
     {
-        return count(array_values(array_filter($this->testCaseTests, function (TestResult $test): bool {
-            return $test->type === TestResult::TODO;
-        })));
+        return count(array_values(array_filter($this->testCaseTests, fn(TestResult $test): bool => $test->type === TestResult::TODO)));
     }
 
     /**
@@ -246,9 +244,7 @@ final class State
 
     public function countTestsInTestSuiteBy(string $type): int
     {
-        return count(array_filter($this->suiteTests, function (TestResult $testResult) use ($type) {
-            return $testResult->type === $type;
-        }));
+        return count(array_filter($this->suiteTests, fn(TestResult $testResult) => $testResult->type === $type));
     }
 
     /**

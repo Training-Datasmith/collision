@@ -166,7 +166,7 @@ final class Style
 
         $failTypes = array_unique($failTypes);
 
-        $errors = array_values(array_filter($state->suiteTests, fn (TestResult $testResult) => in_array(
+        $errors = array_values(array_filter($state->suiteTests, fn (TestResult $testResult): bool => in_array(
             $testResult->type,
             $failTypes,
             true
@@ -309,7 +309,7 @@ final class Style
             HTML, $testResult->testCaseName, $testResult->description, $color, $seconds));
         }
 
-        $timeElapsedInSlowTests = array_sum(array_map(fn (TestResult $testResult) => $testResult->duration / 1000, $slowTests));
+        $timeElapsedInSlowTests = array_sum(array_map(fn (TestResult $testResult): float => $testResult->duration / 1000, $slowTests));
 
         $timeElapsedAsString = number_format($timeElapsed, 2, '.', '');
         $percentageInSlowTestsAsString = number_format($timeElapsedInSlowTests * 100 / $timeElapsed, 2, '.', '');
@@ -561,15 +561,16 @@ final class Style
     {
         $reflection = new ReflectionFunction($closure);
 
-        $sanitizedPath = (string) str_replace('\\', '/', (string) $frame->getFile());
+        $sanitizedPath = str_replace('\\', '/', (string) $frame->getFile());
 
         /** @phpstan-ignore-next-line */
-        $sanitizedClosurePath = (string) str_replace('\\', '/', $reflection->getFileName());
+        $sanitizedClosurePath = str_replace('\\', '/', $reflection->getFileName());
 
-        if ($sanitizedPath === $sanitizedClosurePath) {
-            if ($reflection->getStartLine() <= $frame->getLine() && $frame->getLine() <= $reflection->getEndLine()) {
-                return true;
-            }
+        if ($sanitizedPath !== $sanitizedClosurePath) {
+            return false;
+        }
+        if ($reflection->getStartLine() <= $frame->getLine() && $frame->getLine() <= $reflection->getEndLine()) {
+            return true;
         }
 
         return false;

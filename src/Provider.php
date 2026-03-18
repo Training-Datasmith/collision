@@ -12,7 +12,7 @@ use Whoops\RunInterface;
  *
  * @see \Tests\Unit\ProviderTest
  */
-final class Provider
+final readonly class Provider
 {
     /**
      * Holds an instance of the Run.

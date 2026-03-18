@@ -16,13 +16,6 @@ use Throwable;
 final class ExceptionHandler implements ExceptionHandlerContract
 {
     /**
-     * Holds an instance of the application exception handler.
-     *
-     * @var \Illuminate\Contracts\Debug\ExceptionHandler
-     */
-    protected $appExceptionHandler;
-
-    /**
      * Holds an instance of the container.
      *
      * @var \Illuminate\Contracts\Container\Container
@@ -32,16 +25,18 @@ final class ExceptionHandler implements ExceptionHandlerContract
     /**
      * Creates a new instance of the ExceptionHandler.
      */
-    public function __construct(Container $container, ExceptionHandlerContract $appExceptionHandler)
+    public function __construct(Container $container, /**
+     * Holds an instance of the application exception handler.
+     */
+    protected ExceptionHandlerContract $appExceptionHandler)
     {
         $this->container = $container;
-        $this->appExceptionHandler = $appExceptionHandler;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function report(Throwable $e)
+    public function report(Throwable $e): void
     {
         $this->appExceptionHandler->report($e);
     }
@@ -57,7 +52,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
     /**
      * {@inheritdoc}
      */
-    public function renderForConsole($output, Throwable $e)
+    public function renderForConsole(\Symfony\Component\Console\Output\OutputInterface $output, Throwable $e): void
     {
         if ($e instanceof SymfonyConsoleExceptionInterface) {
             $this->appExceptionHandler->renderForConsole($output, $e);
@@ -100,7 +95,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
      *
      * @return $this
      */
-    public function renderable(callable $renderUsing)
+    public function renderable(callable $renderUsing): self
     {
         $this->appExceptionHandler->renderable($renderUsing);
 
@@ -112,7 +107,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
      *
      * @return $this
      */
-    public function dontReportDuplicates()
+    public function dontReportDuplicates(): self
     {
         $this->appExceptionHandler->dontReportDuplicates();
 

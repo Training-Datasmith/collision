@@ -14,19 +14,18 @@ use Throwable;
  */
 final class IgnitionSolutionsRepository implements SolutionsRepository
 {
-    /**
-     * Holds an instance of ignition solutions provider repository.
-     *
-     * @var IgnitionSolutionProviderRepository|SolutionProviderRepository
-     */
-    protected $solutionProviderRepository; // @phpstan-ignore-line
+    // @phpstan-ignore-line
 
     /**
      * IgnitionSolutionsRepository constructor.
      */
-    public function __construct(IgnitionSolutionProviderRepository|SolutionProviderRepository $solutionProviderRepository) // @phpstan-ignore-line
+    public function __construct(
+        /**
+         * Holds an instance of ignition solutions provider repository.
+         */
+        protected IgnitionSolutionProviderRepository|SolutionProviderRepository $solutionProviderRepository
+    )
     {
-        $this->solutionProviderRepository = $solutionProviderRepository;
     }
 
     /**

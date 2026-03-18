@@ -11,7 +11,7 @@ use ReflectionClass;
 /**
  * @internal
  */
-final class TestException
+final readonly class TestException implements \Stringable
 {
     private const DIFF_SEPARATOR = '--- Expected'.PHP_EOL.'+++ Actual'.PHP_EOL.'@@ @@'.PHP_EOL;
 
@@ -19,8 +19,8 @@ final class TestException
      * Creates a new Exception instance.
      */
     public function __construct(
-        private readonly Throwable $throwable,
-        private readonly bool $isVerbose
+        private Throwable $throwable,
+        private bool $isVerbose
     ) {
         //
     }
@@ -82,8 +82,8 @@ final class TestException
         $actual = $matches[1][0];
         $expected = $matches[2][0];
 
-        $actualExploded = explode(PHP_EOL, $actual);
-        $expectedExploded = explode(PHP_EOL, $expected);
+        $actualExploded = explode(PHP_EOL, (string) $actual);
+        $expectedExploded = explode(PHP_EOL, (string) $expected);
 
         if (($countActual = count($actualExploded)) > 4 && ! $this->isVerbose) {
             $actualExploded = array_slice($actualExploded, 0, 3);
@@ -149,9 +149,9 @@ final class TestException
     {
         $frames = explode("\n", $this->getTraceAsString());
 
-        $frames = array_filter($frames, fn ($trace) => $trace !== '');
+        $frames = array_filter($frames, fn ($trace): bool => $trace !== '');
 
-        return array_map(function ($trace) {
+        return array_map(function ($trace): ?array {
             if (trim($trace) === '') {
                 return null;
             }
@@ -181,7 +181,7 @@ final class TestException
         return null;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getMessage();
     }

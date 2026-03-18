@@ -32,7 +32,7 @@ final class Writer
     /**
      * Holds an instance of the solutions repository.
      */
-    private SolutionsRepository $solutionsRepository;
+    private readonly SolutionsRepository $solutionsRepository;
 
     /**
      * Holds an instance of the Output.
@@ -42,12 +42,12 @@ final class Writer
     /**
      * Holds an instance of the Argument Formatter.
      */
-    private ArgumentFormatter $argumentFormatter;
+    private readonly ArgumentFormatter $argumentFormatter;
 
     /**
      * Holds an instance of the Highlighter.
      */
-    private Highlighter $highlighter;
+    private readonly Highlighter $highlighter;
 
     /**
      * Ignores traces where the file string matches one
@@ -166,7 +166,7 @@ final class Writer
     {
         return $inspector->getFrames()
             ->filter(
-                function ($frame) {
+                function ($frame): bool {
                     // If we are in verbose mode, we always
                     // display the full stack trace.
                     if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -234,15 +234,13 @@ final class Writer
             $description = $solution->getSolutionDescription();  // @phpstan-ignore-line
             $links = $solution->getDocumentationLinks();  // @phpstan-ignore-line
 
-            $description = trim((string) preg_replace("/\n/", "\n    ", $description));
+            $description = trim((string) preg_replace("/\n/", "\n    ", (string) $description));
 
             $this->render(sprintf(
                 '<fg=cyan;options=bold>i</>   <fg=default;options=bold>%s</>: %s %s',
-                rtrim($title, '.'),
+                rtrim((string) $title, '.'),
                 $description,
-                implode(', ', array_map(function (string $link) {
-                    return sprintf("\n      <fg=gray>%s</>", $link);
-                }, $links))
+                implode(', ', array_map(fn(string $link) => sprintf("\n      <fg=gray>%s</>", $link), $links))
             ));
         }
 
@@ -283,7 +281,7 @@ final class Writer
         }
 
         foreach ($frames as $i => $frame) {
-            if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE && strpos($frame->getFile(), '/vendor/') !== false) {
+            if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE && str_contains((string) $frame->getFile(), '/vendor/')) {
                 $vendorFrames++;
 
                 continue;
