@@ -24,8 +24,7 @@ final class IgnitionSolutionsRepository implements SolutionsRepository
          * Holds an instance of ignition solutions provider repository.
          */
         protected IgnitionSolutionProviderRepository|SolutionProviderRepository $solutionProviderRepository
-    )
-    {
+    ) {
     }
 
     /**

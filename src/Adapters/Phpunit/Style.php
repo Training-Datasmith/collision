@@ -24,13 +24,16 @@ use ReflectionClass;
 use ReflectionFunction;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Termwind\Terminal;
-use Whoops\Exception\Frame;
-use Whoops\Exception\Inspector;
 
 use function Termwind\render;
 use function Termwind\renderUsing;
+
+use Termwind\Terminal;
+
 use function Termwind\terminal;
+
+use Whoops\Exception\Frame;
+use Whoops\Exception\Inspector;
 
 /**
  * @internal
@@ -56,7 +59,7 @@ final class Style
     public function __construct(ConsoleOutputInterface $output)
     {
         if (! $output instanceof ConsoleOutput) {
-            throw new ShouldNotHappen;
+            throw new ShouldNotHappen();
         }
 
         $this->terminal = terminal();
@@ -174,11 +177,12 @@ final class Style
 
         array_map(function (TestResult $testResult): void {
             if (! $testResult->throwable instanceof Throwable) {
-                throw new ShouldNotHappen;
+                throw new ShouldNotHappen();
             }
 
             renderUsing($this->output);
-            render(<<<'HTML'
+            render(
+                <<<'HTML'
                 <div class="mx-2 text-red">
                     <hr/>
                 </div>
@@ -338,7 +342,7 @@ final class Style
      */
     public function writeError(Throwable $throwable): void
     {
-        $writer = (new Writer)->setOutput($this->output);
+        $writer = (new Writer())->setOutput($this->output);
 
         $throwable = new TestException($throwable, $this->output->isVerbose());
 

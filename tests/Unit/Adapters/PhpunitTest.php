@@ -43,7 +43,8 @@ class PhpunitTest extends TestCase
             '--exclude-group=custom-name',
         ]);
 
-        $this->assertConsoleOutputContainsString(<<<EOF
+        $this->assertConsoleOutputContainsString(
+            <<<EOF
    WARN  Tests\Feature\ExampleTest
   - skipped example → This is a skip description
   … incomplete example → This is a incomplete description
@@ -69,7 +70,8 @@ EOF,
             'custom-name',
         ]);
 
-        $this->assertConsoleOutputContainsString(<<<'EOF'
+        $this->assertConsoleOutputContainsString(
+            <<<'EOF'
    PASS  my-custom-test-case-name
   ✓ my-custom-test-case-name
 
@@ -88,7 +90,8 @@ EOF,
             'unexpected-output',
         ]);
 
-        $this->assertConsoleOutputContainsString(<<<'EOF'
+        $this->assertConsoleOutputContainsString(
+            <<<'EOF'
 This is an unexpected output
    PASS  LaravelApp\tests\Feature\ExampleWithUnexpectedOutputTest
   ✓ pass example
@@ -108,7 +111,8 @@ EOF,
             'todo',
         ]);
 
-        $this->assertConsoleOutputContainsString(<<<'EOF'
+        $this->assertConsoleOutputContainsString(
+            <<<'EOF'
    TODO  Tests\Unit\ExampleTest - 1 todo
   ↓ todo example
 

@@ -48,7 +48,7 @@ class CollisionServiceProvider extends ServiceProvider
 
                     $solutionsRepository = new IgnitionSolutionsRepository($solutionProviderRepository);
                 } else {
-                    $solutionsRepository = new NullSolutionsRepository;
+                    $solutionsRepository = new NullSolutionsRepository();
                 }
 
                 $writer = new Writer($solutionsRepository);
@@ -62,7 +62,7 @@ class CollisionServiceProvider extends ServiceProvider
 
             $this->app->singleton(
                 ExceptionHandlerContract::class,
-                fn($app) => new ExceptionHandler($app, $appExceptionHandler)
+                fn ($app) => new ExceptionHandler($app, $appExceptionHandler)
             );
         }
     }

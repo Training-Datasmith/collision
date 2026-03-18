@@ -10,7 +10,8 @@ class HelloWorldFile5
     {
         return new FakeRenderableOnCollisionEditorException(
             __DIR__.'/FakeRenderableOnCollisionEditorException.php',
-            16, 'Fail custom editor description'
+            16,
+            'Fail custom editor description'
         );
     }
 }

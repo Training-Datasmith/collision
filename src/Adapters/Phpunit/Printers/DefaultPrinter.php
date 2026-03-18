@@ -35,7 +35,6 @@ use PHPUnit\Event\Test\Skipped;
 use PHPUnit\Event\Test\WarningTriggered;
 use PHPUnit\Event\TestRunner\DeprecationTriggered as TestRunnerDeprecationTriggered;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
-use PHPUnit\Event\TestRunner\ExecutionStarted;
 use PHPUnit\Event\TestRunner\WarningTriggered as TestRunnerWarningTriggered;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
@@ -98,7 +97,7 @@ final class DefaultPrinter
     {
         $this->output = new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, $colors);
 
-        ConfigureIO::of(new ArgvInput, $this->output);
+        ConfigureIO::of(new ArgvInput(), $this->output);
 
         class_exists(\Pest\Collision\Events::class) && \Pest\Collision\Events::setOutput($this->output);
 
@@ -106,7 +105,7 @@ final class DefaultPrinter
 
         $this->style = new Style($this->output);
 
-        $this->state = new State;
+        $this->state = new State();
     }
 
     /**
@@ -167,7 +166,7 @@ final class DefaultPrinter
         $test = $event->test();
 
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen;
+            throw new ShouldNotHappen();
         }
 
         if (! $this->state->existsInTestCase($event->test())) {
@@ -180,7 +179,7 @@ final class DefaultPrinter
             $this->profileSlowTests[$event->test()->id()] = $result;
 
             // Sort the slow tests by time, and keep only 10 of them.
-            uasort($this->profileSlowTests, static fn(TestResult $a, TestResult $b) => $b->duration <=> $a->duration);
+            uasort($this->profileSlowTests, static fn (TestResult $a, TestResult $b) => $b->duration <=> $a->duration);
 
             $this->profileSlowTests = array_slice($this->profileSlowTests, 0, 10);
         }
@@ -196,7 +195,7 @@ final class DefaultPrinter
         $test = $event->test();
 
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen;
+            throw new ShouldNotHappen();
         }
 
         if ($this->state->testCaseHasChanged($test)) {

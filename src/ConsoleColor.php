@@ -103,11 +103,11 @@ class ConsoleColor
             } elseif ($this->isValidStyle($s)) {
                 $sequences[] = $this->styleSequence($s);
             } else {
-                throw new ShouldNotHappen;
+                throw new ShouldNotHappen();
             }
         }
 
-        $sequences = array_filter($sequences, fn($val) => $val !== null);
+        $sequences = array_filter($sequences, fn ($val) => $val !== null);
 
         if (empty($sequences)) {
             return $text;

@@ -89,7 +89,7 @@ final class TestResult
     public static function fromTestCase(Test $test, string $type, ?Throwable $throwable = null): self
     {
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen;
+            throw new ShouldNotHappen();
         }
 
         if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {
@@ -119,7 +119,7 @@ final class TestResult
     public static function fromPestParallelTestCase(Test $test, string $type, ?Throwable $throwable = null): self
     {
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen;
+            throw new ShouldNotHappen();
         }
 
         if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {

@@ -22,7 +22,7 @@ final readonly class TestException implements \Stringable
         private Throwable $throwable,
         private bool $isVerbose
     ) {
-        //
+
     }
 
     public function getThrowable(): Throwable

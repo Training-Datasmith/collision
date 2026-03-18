@@ -28,7 +28,7 @@ final class ExceptionHandler implements ExceptionHandlerContract
     public function __construct(Container $container, /**
      * Holds an instance of the application exception handler.
      */
-    protected ExceptionHandlerContract $appExceptionHandler)
+        protected ExceptionHandlerContract $appExceptionHandler)
     {
         $this->container = $container;
     }

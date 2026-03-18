@@ -81,10 +81,10 @@ final class Writer
         ?ArgumentFormatter $argumentFormatter = null,
         ?Highlighter $highlighter = null
     ) {
-        $this->solutionsRepository = $solutionsRepository ?: new NullSolutionsRepository;
-        $this->output = $output ?: new ConsoleOutput;
-        $this->argumentFormatter = $argumentFormatter ?: new ArgumentFormatter;
-        $this->highlighter = $highlighter ?: new Highlighter;
+        $this->solutionsRepository = $solutionsRepository ?: new NullSolutionsRepository();
+        $this->output = $output ?: new ConsoleOutput();
+        $this->argumentFormatter = $argumentFormatter ?: new ArgumentFormatter();
+        $this->highlighter = $highlighter ?: new Highlighter();
     }
 
     public function write(Inspector $inspector): void
@@ -240,7 +240,7 @@ final class Writer
                 '<fg=cyan;options=bold>i</>   <fg=default;options=bold>%s</>: %s %s',
                 rtrim((string) $title, '.'),
                 $description,
-                implode(', ', array_map(fn(string $link) => sprintf("\n      <fg=gray>%s</>", $link), $links))
+                implode(', ', array_map(fn (string $link) => sprintf("\n      <fg=gray>%s</>", $link), $links))
             ));
         }
 

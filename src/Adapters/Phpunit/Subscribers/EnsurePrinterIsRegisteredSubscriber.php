@@ -87,8 +87,7 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
             $subscribers = [
                 // Configured
-                new class($printer) extends Subscriber implements ConfiguredSubscriber
-                {
+                new class ($printer) extends Subscriber implements ConfiguredSubscriber {
                     public function notify(Configured $event): void
                     {
                         $this->printer()->setDecorated(
@@ -98,8 +97,7 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
                 },
 
                 // Test
-                new class($printer) extends Subscriber implements PrintedUnexpectedOutputSubscriber
-                {
+                new class ($printer) extends Subscriber implements PrintedUnexpectedOutputSubscriber {
                     public function notify(PrintedUnexpectedOutput $event): void
                     {
                         $this->printer()->testPrintedUnexpectedOutput($event);
@@ -107,16 +105,14 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
                 },
 
                 // Test Runner
-                new class($printer) extends Subscriber implements ExecutionStartedSubscriber
-                {
+                new class ($printer) extends Subscriber implements ExecutionStartedSubscriber {
                     public function notify(ExecutionStarted $event): void
                     {
                         $this->printer()->testRunnerExecutionStarted($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements ExecutionFinishedSubscriber
-                {
+                new class ($printer) extends Subscriber implements ExecutionFinishedSubscriber {
                     public function notify(ExecutionFinished $event): void
                     {
                         $this->printer()->testRunnerExecutionFinished($event);
@@ -125,8 +121,7 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 // Test > Hook Methods
 
-                new class($printer) extends Subscriber implements BeforeFirstTestMethodErroredSubscriber
-                {
+                new class ($printer) extends Subscriber implements BeforeFirstTestMethodErroredSubscriber {
                     public function notify(BeforeFirstTestMethodErrored $event): void
                     {
                         $this->printer()->testBeforeFirstTestMethodErrored($event);
@@ -135,16 +130,14 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 // Test > Lifecycle ...
 
-                new class($printer) extends Subscriber implements FinishedSubscriber
-                {
+                new class ($printer) extends Subscriber implements FinishedSubscriber {
                     public function notify(Finished $event): void
                     {
                         $this->printer()->testFinished($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PreparationStartedSubscriber
-                {
+                new class ($printer) extends Subscriber implements PreparationStartedSubscriber {
                     public function notify(PreparationStarted $event): void
                     {
                         $this->printer()->testPreparationStarted($event);
@@ -153,80 +146,70 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 // Test > Issues ...
 
-                new class($printer) extends Subscriber implements ConsideredRiskySubscriber
-                {
+                new class ($printer) extends Subscriber implements ConsideredRiskySubscriber {
                     public function notify(ConsideredRisky $event): void
                     {
                         $this->printer()->testConsideredRisky($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements DeprecationTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements DeprecationTriggeredSubscriber {
                     public function notify(DeprecationTriggered $event): void
                     {
                         $this->printer()->testDeprecationTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements TestRunnerDeprecationTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements TestRunnerDeprecationTriggeredSubscriber {
                     public function notify(TestRunnerDeprecationTriggered $event): void
                     {
                         $this->printer()->testRunnerDeprecationTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements TestRunnerWarningTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements TestRunnerWarningTriggeredSubscriber {
                     public function notify(TestRunnerWarningTriggered $event): void
                     {
                         $this->printer()->testRunnerWarningTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PhpDeprecationTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements PhpDeprecationTriggeredSubscriber {
                     public function notify(PhpDeprecationTriggered $event): void
                     {
                         $this->printer()->testPhpDeprecationTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PhpunitDeprecationTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements PhpunitDeprecationTriggeredSubscriber {
                     public function notify(PhpunitDeprecationTriggered $event): void
                     {
                         $this->printer()->testPhpunitDeprecationTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PhpNoticeTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements PhpNoticeTriggeredSubscriber {
                     public function notify(PhpNoticeTriggered $event): void
                     {
                         $this->printer()->testPhpNoticeTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PhpWarningTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements PhpWarningTriggeredSubscriber {
                     public function notify(PhpWarningTriggered $event): void
                     {
                         $this->printer()->testPhpWarningTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PhpunitWarningTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements PhpunitWarningTriggeredSubscriber {
                     public function notify(PhpunitWarningTriggered $event): void
                     {
                         $this->printer()->testPhpunitWarningTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PhpunitErrorTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements PhpunitErrorTriggeredSubscriber {
                     public function notify(PhpunitErrorTriggered $event): void
                     {
                         $this->printer()->testPhpunitErrorTriggered($event);
@@ -235,53 +218,46 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
 
                 // Test > Outcome ...
 
-                new class($printer) extends Subscriber implements ErroredSubscriber
-                {
+                new class ($printer) extends Subscriber implements ErroredSubscriber {
                     public function notify(Errored $event): void
                     {
                         $this->printer()->testErrored($event);
                     }
                 },
-                new class($printer) extends Subscriber implements FailedSubscriber
-                {
+                new class ($printer) extends Subscriber implements FailedSubscriber {
                     public function notify(Failed $event): void
                     {
                         $this->printer()->testFailed($event);
                     }
                 },
-                new class($printer) extends Subscriber implements MarkedIncompleteSubscriber
-                {
+                new class ($printer) extends Subscriber implements MarkedIncompleteSubscriber {
                     public function notify(MarkedIncomplete $event): void
                     {
                         $this->printer()->testMarkedIncomplete($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements NoticeTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements NoticeTriggeredSubscriber {
                     public function notify(NoticeTriggered $event): void
                     {
                         $this->printer()->testNoticeTriggered($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements PassedSubscriber
-                {
+                new class ($printer) extends Subscriber implements PassedSubscriber {
                     public function notify(Passed $event): void
                     {
                         $this->printer()->testPassed($event);
                     }
                 },
-                new class($printer) extends Subscriber implements SkippedSubscriber
-                {
+                new class ($printer) extends Subscriber implements SkippedSubscriber {
                     public function notify(Skipped $event): void
                     {
                         $this->printer()->testSkipped($event);
                     }
                 },
 
-                new class($printer) extends Subscriber implements WarningTriggeredSubscriber
-                {
+                new class ($printer) extends Subscriber implements WarningTriggeredSubscriber {
                     public function notify(WarningTriggered $event): void
                     {
                         $this->printer()->testWarningTriggered($event);
@@ -303,7 +279,7 @@ if (class_exists(Version::class) && (int) Version::series() >= 10) {
             if ($shouldRegister) {
                 self::$registered = true;
 
-                Facade::instance()->registerSubscriber(new self);
+                Facade::instance()->registerSubscriber(new self());
             }
         }
     }

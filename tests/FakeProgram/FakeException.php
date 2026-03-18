@@ -6,4 +6,6 @@ namespace Tests\FakeProgram;
 
 use Exception;
 
-class FakeException extends Exception {}
+class FakeException extends Exception
+{
+}

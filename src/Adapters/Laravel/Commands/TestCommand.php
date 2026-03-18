@@ -94,12 +94,13 @@ class TestCommand extends Command
 
         $parallel = $this->option('parallel');
 
-        $process = (new Process(array_merge(
-            // Binary ...
-            $this->binary(),
-            // Arguments ...
-            $parallel ? $this->paratestArguments($options) : $this->phpunitArguments($options)
-        ),
+        $process = (new Process(
+            array_merge(
+                // Binary ...
+                $this->binary(),
+                // Arguments ...
+                $parallel ? $this->paratestArguments($options) : $this->phpunitArguments($options)
+            ),
             null,
             // Envs ...
             $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables(),
@@ -183,7 +184,7 @@ class TestCommand extends Command
             $arguments[] = '--colors=always';
         } elseif ($this->option('no-ansi')) {
             $arguments[] = '--colors=never';
-        } elseif ((new Console)->hasColorSupport()) {
+        } elseif ((new Console())->hasColorSupport()) {
             $arguments[] = '--colors=always';
         }
 
@@ -210,7 +211,7 @@ class TestCommand extends Command
     {
         $options = array_merge(['--no-output'], $options);
 
-        $options = array_values(array_filter($options, fn($option) => ! Str::startsWith($option, '--env=')
+        $options = array_values(array_filter($options, fn ($option) => ! Str::startsWith($option, '--env=')
             && $option != '-q'
             && $option != '--quiet'
             && $option != '--coverage'
@@ -245,7 +246,7 @@ class TestCommand extends Command
      */
     protected function paratestArguments($options)
     {
-        $options = array_values(array_filter($options, fn($option) => ! Str::startsWith($option, '--env=')
+        $options = array_values(array_filter($options, fn ($option) => ! Str::startsWith($option, '--env=')
             && $option != '--coverage'
             && $option != '-q'
             && $option != '--quiet'
@@ -264,7 +265,7 @@ class TestCommand extends Command
             "--runner=\Illuminate\Testing\ParallelRunner",
         ], $options);
 
-        $inputDefinition = new InputDefinition;
+        $inputDefinition = new InputDefinition();
         Options::setInputDefinition($inputDefinition);
         $input = new ArgvInput($options, $inputDefinition);
 
@@ -362,7 +363,7 @@ class TestCommand extends Command
 
         $vars = [];
 
-        foreach ((new Parser)->parse($content) as $entry) {
+        foreach ((new Parser())->parse($content) as $entry) {
             $vars[] = $entry->getName();
         }
 

@@ -79,7 +79,7 @@ final class Highlighter
      */
     public function __construct(?ConsoleColor $color = null, bool $UTF8 = true)
     {
-        $this->color = $color ?: new ConsoleColor;
+        $this->color = $color ?: new ConsoleColor();
 
         foreach (self::DEFAULT_THEME as $name => $styles) {
             if (! $this->color->hasTheme($name)) {
@@ -260,13 +260,15 @@ final class Highlighter
 
             if ($markLine !== null) {
                 $snippet .=
-                    ($markLine === $i + 1
+                    (
+                        $markLine === $i + 1
                         ? $this->color->apply(self::ACTUAL_LINE_MARK, $mark)
                         : self::NO_MARK
                     );
 
                 $coloredLineNumber =
-                    ($markLine === $i + 1 ?
+                    (
+                        $markLine === $i + 1 ?
                         $this->coloredLineNumber(self::MARKED_LINE_NUMBER, $i, $lineStrlen) :
                         $coloredLineNumber
                     );
