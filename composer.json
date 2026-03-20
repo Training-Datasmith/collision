@@ -1,7 +1,19 @@
 {
     "name": "nunomaduro/collision",
     "description": "Cli error handling for console/command-line PHP applications.",
-    "keywords": ["console", "command-line", "php", "cli", "error", "handling", "laravel-zero", "laravel", "artisan", "symfony", "dev"],
+    "keywords": [
+        "console",
+        "command-line",
+        "php",
+        "cli",
+        "error",
+        "handling",
+        "laravel-zero",
+        "laravel",
+        "artisan",
+        "symfony",
+        "dev"
+    ],
     "license": "MIT",
     "support": {
         "issues": "https://github.com/nunomaduro/collision/issues",
@@ -36,7 +48,7 @@
         "psr-4": {
             "Tests\\Printer\\": "tests/Printer",
             "Tests\\Unit\\": "tests/Unit",
-            "Tests\\FakeProgram\\": "tests/FakeProgram",
+            "Tests\\Fake_Program\\": "tests/FakeProgram",
             "Tests\\": "tests/LaravelApp/tests",
             "App\\": "tests/LaravelApp/app/"
         }
@@ -45,7 +57,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "NunoMaduro\\Collision\\": "src/"
+            "Nuno_Maduro\\Collision\\": "src/"
         },
         "files": [
             "./src/Adapters/Phpunit/Autoload.php"
