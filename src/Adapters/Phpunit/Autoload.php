@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Phpunit;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit;
-
-use NunoMaduro\Collision\Adapters\Phpunit\Subscribers\EnsurePrinterIsRegisteredSubscriber;
-use PHPUnit\Runner\Version;
-
+use Nuno_Maduro\Collision\Adapters\Phpunit\Subscribers\Ensure_Printer_Is_Registered_Subscriber;
+use Php_Unit\Runner\Version;
 if (class_exists(Version::class) && (int) Version::series() >= 10) {
-    EnsurePrinterIsRegisteredSubscriber::register();
+    Ensure_Printer_Is_Registered_Subscriber::register();
 }

@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-namespace NunoMaduro\Collision;
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision;
 
 /**
  * @internal
@@ -10,147 +9,93 @@ namespace NunoMaduro\Collision;
 final class Highlighter
 {
     public const TOKEN_DEFAULT = 'token_default';
-
     public const TOKEN_COMMENT = 'token_comment';
-
     public const TOKEN_STRING = 'token_string';
-
     public const TOKEN_HTML = 'token_html';
-
     public const TOKEN_KEYWORD = 'token_keyword';
-
     public const ACTUAL_LINE_MARK = 'actual_line_mark';
-
     public const LINE_NUMBER = 'line_number';
-
     private const ARROW_SYMBOL = '>';
-
     private const DELIMITER = '|';
-
     private const ARROW_SYMBOL_UTF8 = '➜';
-
-    private const DELIMITER_UTF8 = '▕'; // '▶';
-
+    private const DELIMITER_UTF8 = '▕';
+    // '▶';
     private const LINE_NUMBER_DIVIDER = 'line_divider';
-
     private const MARKED_LINE_NUMBER = 'marked_line';
-
     private const WIDTH = 3;
-
     /**
      * Holds the theme.
      */
-    private const THEME = [
-        self::TOKEN_STRING => ['light_gray'],
-        self::TOKEN_COMMENT => ['dark_gray', 'italic'],
-        self::TOKEN_KEYWORD => ['magenta', 'bold'],
-        self::TOKEN_DEFAULT => ['default', 'bold'],
-        self::TOKEN_HTML => ['blue', 'bold'],
-
-        self::ACTUAL_LINE_MARK => ['red', 'bold'],
-        self::LINE_NUMBER => ['dark_gray'],
-        self::MARKED_LINE_NUMBER => ['italic', 'bold'],
-        self::LINE_NUMBER_DIVIDER => ['dark_gray'],
-    ];
-
-    private readonly ConsoleColor $color;
-
-    private const DEFAULT_THEME = [
-        self::TOKEN_STRING => 'red',
-        self::TOKEN_COMMENT => 'yellow',
-        self::TOKEN_KEYWORD => 'green',
-        self::TOKEN_DEFAULT => 'default',
-        self::TOKEN_HTML => 'cyan',
-
-        self::ACTUAL_LINE_MARK => 'dark_gray',
-        self::LINE_NUMBER => 'dark_gray',
-        self::MARKED_LINE_NUMBER => 'dark_gray',
-        self::LINE_NUMBER_DIVIDER => 'dark_gray',
-    ];
-
+    private const THEME = [self::TOKEN_STRING => ['light_gray'], self::TOKEN_COMMENT => ['dark_gray', 'italic'], self::TOKEN_KEYWORD => ['magenta', 'bold'], self::TOKEN_DEFAULT => ['default', 'bold'], self::TOKEN_HTML => ['blue', 'bold'], self::ACTUAL_LINE_MARK => ['red', 'bold'], self::LINE_NUMBER => ['dark_gray'], self::MARKED_LINE_NUMBER => ['italic', 'bold'], self::LINE_NUMBER_DIVIDER => ['dark_gray']];
+    private readonly Console_Color $color;
+    private const DEFAULT_THEME = [self::TOKEN_STRING => 'red', self::TOKEN_COMMENT => 'yellow', self::TOKEN_KEYWORD => 'green', self::TOKEN_DEFAULT => 'default', self::TOKEN_HTML => 'cyan', self::ACTUAL_LINE_MARK => 'dark_gray', self::LINE_NUMBER => 'dark_gray', self::MARKED_LINE_NUMBER => 'dark_gray', self::LINE_NUMBER_DIVIDER => 'dark_gray'];
     private string $delimiter = self::DELIMITER_UTF8;
-
     private string $arrow = self::ARROW_SYMBOL_UTF8;
-
     private const NO_MARK = '    ';
-
     /**
      * Creates an instance of the Highlighter.
      */
-    public function __construct(?ConsoleColor $color = null, bool $UTF8 = true)
+    public function __construct(?Console_Color $color = null, bool $UTF8 = true)
     {
-        $this->color = $color ?: new ConsoleColor();
-
+        $this->color = $color ?: new Console_Color();
         foreach (self::DEFAULT_THEME as $name => $styles) {
-            if (! $this->color->hasTheme($name)) {
-                $this->color->addTheme($name, $styles);
+            if (!$this->color->has_theme($name)) {
+                $this->color->add_theme($name, $styles);
             }
         }
-
         foreach (self::THEME as $name => $styles) {
-            $this->color->addTheme($name, $styles);
+            $this->color->add_theme($name, $styles);
         }
-        if (! $UTF8) {
+        if (!$UTF8) {
             $this->delimiter = self::DELIMITER;
             $this->arrow = self::ARROW_SYMBOL;
         }
         $this->delimiter .= ' ';
     }
-
     /**
      * Highlights the provided content.
      */
     public function highlight(string $content, int $line): string
     {
-        return rtrim($this->getCodeSnippet($content, $line, 4, 4));
+        return rtrim($this->get_code_snippet($content, $line, 4, 4));
     }
-
     /**
      * Highlights the provided content.
      */
-    public function getCodeSnippet(string $source, int $lineNumber, int $linesBefore = 2, int $linesAfter = 2): string
+    public function get_code_snippet(string $source, int $line_number, int $lines_before = 2, int $lines_after = 2): string
     {
-        $tokenLines = $this->getHighlightedLines($source);
-
-        $offset = $lineNumber - $linesBefore - 1;
+        $token_lines = $this->get_highlighted_lines($source);
+        $offset = $line_number - $lines_before - 1;
         $offset = max($offset, 0);
-        $length = $linesAfter + $linesBefore + 1;
-        $tokenLines = array_slice($tokenLines, $offset, $length, $preserveKeys = true);
-
-        $lines = $this->colorLines($tokenLines);
-
-        return $this->lineNumbers($lines, $lineNumber);
+        $length = $lines_after + $lines_before + 1;
+        $token_lines = array_slice($token_lines, $offset, $length, $preserve_keys = true);
+        $lines = $this->color_lines($token_lines);
+        return $this->line_numbers($lines, $line_number);
     }
-
-    private function getHighlightedLines(string $source): array
+    private function get_highlighted_lines(string $source): array
     {
         $source = str_replace(["\r\n", "\r"], "\n", $source);
         $tokens = $this->tokenize($source);
-
-        return $this->splitToLines($tokens);
+        return $this->split_to_lines($tokens);
     }
-
     private function tokenize(string $source): array
     {
         $tokens = token_get_all($source);
-
         $output = [];
-        $currentType = null;
+        $current_type = null;
         $buffer = '';
-        $newType = null;
-
+        $new_type = null;
         foreach ($tokens as $token) {
             if (is_array($token)) {
                 switch ($token[0]) {
                     case T_WHITESPACE:
                         break;
-
                     case T_OPEN_TAG:
                     case T_OPEN_TAG_WITH_ECHO:
                     case T_CLOSE_TAG:
                     case T_STRING:
                     case T_VARIABLE:
-                        // Constants
+                    // Constants
                     case T_DIR:
                     case T_FILE:
                     case T_METHOD_C:
@@ -161,130 +106,95 @@ final class Highlighter
                     case T_CLASS_C:
                     case T_FUNC_C:
                     case T_TRAIT_C:
-                        $newType = self::TOKEN_DEFAULT;
+                        $new_type = self::TOKEN_DEFAULT;
                         break;
-
                     case T_COMMENT:
                     case T_DOC_COMMENT:
-                        $newType = self::TOKEN_COMMENT;
+                        $new_type = self::TOKEN_COMMENT;
                         break;
-
                     case T_ENCAPSED_AND_WHITESPACE:
                     case T_CONSTANT_ENCAPSED_STRING:
-                        $newType = self::TOKEN_STRING;
+                        $new_type = self::TOKEN_STRING;
                         break;
-
                     case T_INLINE_HTML:
-                        $newType = self::TOKEN_HTML;
+                        $new_type = self::TOKEN_HTML;
                         break;
-
                     default:
-                        $newType = self::TOKEN_KEYWORD;
+                        $new_type = self::TOKEN_KEYWORD;
                 }
             } else {
-                $newType = $token === '"' ? self::TOKEN_STRING : self::TOKEN_KEYWORD;
+                $new_type = $token === '"' ? self::TOKEN_STRING : self::TOKEN_KEYWORD;
             }
-
-            if ($currentType === null) {
-                $currentType = $newType;
+            if ($current_type === null) {
+                $current_type = $new_type;
             }
-
-            if ($currentType !== $newType) {
-                $output[] = [$currentType, $buffer];
+            if ($current_type !== $new_type) {
+                $output[] = [$current_type, $buffer];
                 $buffer = '';
-                $currentType = $newType;
+                $current_type = $new_type;
             }
-
             $buffer .= is_array($token) ? $token[1] : $token;
         }
-
-        if (isset($newType)) {
-            $output[] = [$newType, $buffer];
+        if (isset($new_type)) {
+            $output[] = [$new_type, $buffer];
         }
-
         return $output;
     }
-
-    private function splitToLines(array $tokens): array
+    private function split_to_lines(array $tokens): array
     {
         $lines = [];
-
         $line = [];
         foreach ($tokens as $token) {
-            foreach (explode("\n", (string) $token[1]) as $count => $tokenLine) {
+            foreach (explode("\n", (string) $token[1]) as $count => $token_line) {
                 if ($count > 0) {
                     $lines[] = $line;
                     $line = [];
                 }
-
-                if ($tokenLine === '') {
+                if ($token_line === '') {
                     continue;
                 }
-
-                $line[] = [$token[0], $tokenLine];
+                $line[] = [$token[0], $token_line];
             }
         }
-
         $lines[] = $line;
-
         return $lines;
     }
-
-    private function colorLines(array $tokenLines): array
+    private function color_lines(array $token_lines): array
     {
         $lines = [];
-        foreach ($tokenLines as $lineCount => $tokenLine) {
+        foreach ($token_lines as $line_count => $token_line) {
             $line = '';
-            foreach ($tokenLine as $token) {
-                [$tokenType, $tokenValue] = $token;
-                if ($this->color->hasTheme($tokenType)) {
-                    $line .= $this->color->apply($tokenType, $tokenValue);
+            foreach ($token_line as $token) {
+                [$token_type, $token_value] = $token;
+                if ($this->color->has_theme($token_type)) {
+                    $line .= $this->color->apply($token_type, $token_value);
                 } else {
-                    $line .= $tokenValue;
+                    $line .= $token_value;
                 }
             }
-            $lines[$lineCount] = $line;
+            $lines[$line_count] = $line;
         }
-
         return $lines;
     }
-
-    private function lineNumbers(array $lines, ?int $markLine = null): string
+    private function line_numbers(array $lines, ?int $mark_line = null): string
     {
-        $lineStrlen = strlen((string) ((int) array_key_last($lines) + 1));
-        $lineStrlen = $lineStrlen < self::WIDTH ? self::WIDTH : $lineStrlen;
+        $line_strlen = strlen((string) ((int) array_key_last($lines) + 1));
+        $line_strlen = $line_strlen < self::WIDTH ? self::WIDTH : $line_strlen;
         $snippet = '';
-        $mark = '  '.$this->arrow.' ';
+        $mark = '  ' . $this->arrow . ' ';
         foreach ($lines as $i => $line) {
-            $coloredLineNumber = $this->coloredLineNumber(self::LINE_NUMBER, $i, $lineStrlen);
-
-            if ($markLine !== null) {
-                $snippet .=
-                    (
-                        $markLine === $i + 1
-                        ? $this->color->apply(self::ACTUAL_LINE_MARK, $mark)
-                        : self::NO_MARK
-                    );
-
-                $coloredLineNumber =
-                    (
-                        $markLine === $i + 1 ?
-                        $this->coloredLineNumber(self::MARKED_LINE_NUMBER, $i, $lineStrlen) :
-                        $coloredLineNumber
-                    );
+            $colored_line_number = $this->colored_line_number(self::LINE_NUMBER, $i, $line_strlen);
+            if ($mark_line !== null) {
+                $snippet .= $mark_line === $i + 1 ? $this->color->apply(self::ACTUAL_LINE_MARK, $mark) : self::NO_MARK;
+                $colored_line_number = $mark_line === $i + 1 ? $this->colored_line_number(self::MARKED_LINE_NUMBER, $i, $line_strlen) : $colored_line_number;
             }
-            $snippet .= $coloredLineNumber;
-
-            $snippet .=
-                $this->color->apply(self::LINE_NUMBER_DIVIDER, $this->delimiter);
-
-            $snippet .= $line.PHP_EOL;
+            $snippet .= $colored_line_number;
+            $snippet .= $this->color->apply(self::LINE_NUMBER_DIVIDER, $this->delimiter);
+            $snippet .= $line . PHP_EOL;
         }
-
         return $snippet;
     }
-
-    private function coloredLineNumber(string $style, int $i, int $length): string
+    private function colored_line_number(string $style, int $i, int $length): string
     {
         return $this->color->apply($style, str_pad((string) ($i + 1), $length, ' ', STR_PAD_LEFT));
     }

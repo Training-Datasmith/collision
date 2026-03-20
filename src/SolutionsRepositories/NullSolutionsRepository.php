@@ -1,21 +1,19 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Solutions_Repositories;
 
-namespace NunoMaduro\Collision\SolutionsRepositories;
-
-use NunoMaduro\Collision\Contracts\SolutionsRepository;
+use Nuno_Maduro\Collision\Contracts\Solutions_Repository;
 use Throwable;
-
 /**
  * @internal
  */
-final class NullSolutionsRepository implements SolutionsRepository
+final class Null_Solutions_Repository implements Solutions_Repository
 {
     /**
      * {@inheritdoc}
      */
-    public function getFromThrowable(Throwable $throwable): array  // @phpstan-ignore-line
+    public function get_from_throwable(Throwable $throwable): array
     {
         return [];
     }

@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /**
  * This file is part of Collision.
  *
@@ -10,11 +9,9 @@ declare(strict_types=1);
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
+namespace Nuno_Maduro\Collision\Adapters\Phpunit\Subscribers;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit\Subscribers;
-
-use NunoMaduro\Collision\Adapters\Phpunit\Printers\ReportablePrinter;
-
+use Nuno_Maduro\Collision\Adapters\Phpunit\Printers\Reportable_Printer;
 /**
  * @internal
  */
@@ -27,14 +24,14 @@ abstract class Subscriber
         /**
          * The printer instance.
          */
-        private readonly ReportablePrinter $printer
-    ) {
+        private readonly Reportable_Printer $printer
+    )
+    {
     }
-
     /**
      * Returns the printer instance.
      */
-    protected function printer(): ReportablePrinter
+    protected function printer(): Reportable_Printer
     {
         return $this->printer;
     }

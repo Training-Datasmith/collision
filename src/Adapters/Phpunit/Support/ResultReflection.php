@@ -1,21 +1,19 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Phpunit\Support;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit\Support;
-
-use PHPUnit\TestRunner\TestResult\TestResult;
-
+use Php_Unit\Test_Runner\Test_Result\Test_Result;
 /**
  * @internal
  */
-final class ResultReflection
+final class Result_Reflection
 {
     /**
      * The number of processed tests.
      */
-    public static function numberOfTests(TestResult $testResult): int
+    public static function number_of_tests(Test_Result $test_result): int
     {
-        return (fn () => $this->numberOfTests)->call($testResult);
+        return (fn() => $this->number_of_tests)->call($test_result);
     }
 }

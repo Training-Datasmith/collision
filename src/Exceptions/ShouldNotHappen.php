@@ -1,21 +1,18 @@
 <?php
 
-declare(strict_types=1);
-
-namespace NunoMaduro\Collision\Exceptions;
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Exceptions;
 
 use RuntimeException;
-
 /**
  * @internal
  */
-final class ShouldNotHappen extends RuntimeException
+final class Should_Not_Happen extends RuntimeException
 {
     /**
      * @var string
      */
     private const MESSAGE = 'This should not happen, please open an issue on collision repository: %s';
-
     /**
      * Creates a new Exception instance.
      */

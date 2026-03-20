@@ -1,285 +1,272 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Phpunit\Subscribers;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit\Subscribers;
-
-use NunoMaduro\Collision\Adapters\Phpunit\Printers\DefaultPrinter;
-use NunoMaduro\Collision\Adapters\Phpunit\Printers\ReportablePrinter;
-use PHPUnit\Event\Application\Started;
-use PHPUnit\Event\Application\StartedSubscriber;
-use PHPUnit\Event\Facade;
-use PHPUnit\Event\Test\BeforeFirstTestMethodErrored;
-use PHPUnit\Event\Test\BeforeFirstTestMethodErroredSubscriber;
-use PHPUnit\Event\Test\ConsideredRisky;
-use PHPUnit\Event\Test\ConsideredRiskySubscriber;
-use PHPUnit\Event\Test\DeprecationTriggered;
-use PHPUnit\Event\Test\DeprecationTriggeredSubscriber;
-use PHPUnit\Event\Test\Errored;
-use PHPUnit\Event\Test\ErroredSubscriber;
-use PHPUnit\Event\Test\Failed;
-use PHPUnit\Event\Test\FailedSubscriber;
-use PHPUnit\Event\Test\Finished;
-use PHPUnit\Event\Test\FinishedSubscriber;
-use PHPUnit\Event\Test\MarkedIncomplete;
-use PHPUnit\Event\Test\MarkedIncompleteSubscriber;
-use PHPUnit\Event\Test\NoticeTriggered;
-use PHPUnit\Event\Test\NoticeTriggeredSubscriber;
-use PHPUnit\Event\Test\Passed;
-use PHPUnit\Event\Test\PassedSubscriber;
-use PHPUnit\Event\Test\PhpDeprecationTriggered;
-use PHPUnit\Event\Test\PhpDeprecationTriggeredSubscriber;
-use PHPUnit\Event\Test\PhpNoticeTriggered;
-use PHPUnit\Event\Test\PhpNoticeTriggeredSubscriber;
-use PHPUnit\Event\Test\PhpunitDeprecationTriggered;
-use PHPUnit\Event\Test\PhpunitDeprecationTriggeredSubscriber;
-use PHPUnit\Event\Test\PhpunitErrorTriggered;
-use PHPUnit\Event\Test\PhpunitErrorTriggeredSubscriber;
-use PHPUnit\Event\Test\PhpunitWarningTriggered;
-use PHPUnit\Event\Test\PhpunitWarningTriggeredSubscriber;
-use PHPUnit\Event\Test\PhpWarningTriggered;
-use PHPUnit\Event\Test\PhpWarningTriggeredSubscriber;
-use PHPUnit\Event\Test\PreparationStarted;
-use PHPUnit\Event\Test\PreparationStartedSubscriber;
-use PHPUnit\Event\Test\PrintedUnexpectedOutput;
-use PHPUnit\Event\Test\PrintedUnexpectedOutputSubscriber;
-use PHPUnit\Event\Test\Skipped;
-use PHPUnit\Event\Test\SkippedSubscriber;
-use PHPUnit\Event\Test\WarningTriggered;
-use PHPUnit\Event\Test\WarningTriggeredSubscriber;
-use PHPUnit\Event\TestRunner\Configured;
-use PHPUnit\Event\TestRunner\ConfiguredSubscriber;
-use PHPUnit\Event\TestRunner\DeprecationTriggered as TestRunnerDeprecationTriggered;
-use PHPUnit\Event\TestRunner\DeprecationTriggeredSubscriber as TestRunnerDeprecationTriggeredSubscriber;
-use PHPUnit\Event\TestRunner\ExecutionFinished;
-use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
-use PHPUnit\Event\TestRunner\ExecutionStarted;
-use PHPUnit\Event\TestRunner\ExecutionStartedSubscriber;
-use PHPUnit\Event\TestRunner\WarningTriggered as TestRunnerWarningTriggered;
-use PHPUnit\Event\TestRunner\WarningTriggeredSubscriber as TestRunnerWarningTriggeredSubscriber;
-use PHPUnit\Runner\Version;
-
+use Nuno_Maduro\Collision\Adapters\Phpunit\Printers\Default_Printer;
+use Nuno_Maduro\Collision\Adapters\Phpunit\Printers\Reportable_Printer;
+use Php_Unit\Event\Application\Started;
+use Php_Unit\Event\Application\Started_Subscriber;
+use Php_Unit\Event\Facade;
+use Php_Unit\Event\Test\Before_First_Test_Method_Errored;
+use Php_Unit\Event\Test\Before_First_Test_Method_Errored_Subscriber;
+use Php_Unit\Event\Test\Considered_Risky;
+use Php_Unit\Event\Test\Considered_Risky_Subscriber;
+use Php_Unit\Event\Test\Deprecation_Triggered;
+use Php_Unit\Event\Test\Deprecation_Triggered_Subscriber;
+use Php_Unit\Event\Test\Errored;
+use Php_Unit\Event\Test\Errored_Subscriber;
+use Php_Unit\Event\Test\Failed;
+use Php_Unit\Event\Test\Failed_Subscriber;
+use Php_Unit\Event\Test\Finished;
+use Php_Unit\Event\Test\Finished_Subscriber;
+use Php_Unit\Event\Test\Marked_Incomplete;
+use Php_Unit\Event\Test\Marked_Incomplete_Subscriber;
+use Php_Unit\Event\Test\Notice_Triggered;
+use Php_Unit\Event\Test\Notice_Triggered_Subscriber;
+use Php_Unit\Event\Test\Passed;
+use Php_Unit\Event\Test\Passed_Subscriber;
+use Php_Unit\Event\Test\Php_Deprecation_Triggered;
+use Php_Unit\Event\Test\Php_Deprecation_Triggered_Subscriber;
+use Php_Unit\Event\Test\Php_Notice_Triggered;
+use Php_Unit\Event\Test\Php_Notice_Triggered_Subscriber;
+use Php_Unit\Event\Test\Phpunit_Deprecation_Triggered;
+use Php_Unit\Event\Test\Phpunit_Deprecation_Triggered_Subscriber;
+use Php_Unit\Event\Test\Phpunit_Error_Triggered;
+use Php_Unit\Event\Test\Phpunit_Error_Triggered_Subscriber;
+use Php_Unit\Event\Test\Phpunit_Warning_Triggered;
+use Php_Unit\Event\Test\Phpunit_Warning_Triggered_Subscriber;
+use Php_Unit\Event\Test\Php_Warning_Triggered;
+use Php_Unit\Event\Test\Php_Warning_Triggered_Subscriber;
+use Php_Unit\Event\Test\Preparation_Started;
+use Php_Unit\Event\Test\Preparation_Started_Subscriber;
+use Php_Unit\Event\Test\Printed_Unexpected_Output;
+use Php_Unit\Event\Test\Printed_Unexpected_Output_Subscriber;
+use Php_Unit\Event\Test\Skipped;
+use Php_Unit\Event\Test\Skipped_Subscriber;
+use Php_Unit\Event\Test\Warning_Triggered;
+use Php_Unit\Event\Test\Warning_Triggered_Subscriber;
+use Php_Unit\Event\Test_Runner\Configured;
+use Php_Unit\Event\Test_Runner\Configured_Subscriber;
+use Php_Unit\Event\Test_Runner\Deprecation_Triggered as TestRunnerDeprecationTriggered;
+use Php_Unit\Event\Test_Runner\Deprecation_Triggered_Subscriber as TestRunnerDeprecationTriggeredSubscriber;
+use Php_Unit\Event\Test_Runner\Execution_Finished;
+use Php_Unit\Event\Test_Runner\Execution_Finished_Subscriber;
+use Php_Unit\Event\Test_Runner\Execution_Started;
+use Php_Unit\Event\Test_Runner\Execution_Started_Subscriber;
+use Php_Unit\Event\Test_Runner\Warning_Triggered as TestRunnerWarningTriggered;
+use Php_Unit\Event\Test_Runner\Warning_Triggered_Subscriber as TestRunnerWarningTriggeredSubscriber;
+use Php_Unit\Runner\Version;
 if (class_exists(Version::class) && (int) Version::series() >= 10) {
     /**
      * @internal
      */
-    final class EnsurePrinterIsRegisteredSubscriber implements StartedSubscriber
+    final class Ensure_Printer_Is_Registered_Subscriber implements Started_Subscriber
     {
         /**
          * If this subscriber has been registered on PHPUnit's facade.
          */
         private static bool $registered = false;
-
         /**
          * Runs the subscriber.
          */
         public function notify(Started $event): void
         {
-            $printer = new ReportablePrinter(new DefaultPrinter(true));
-
+            $printer = new Reportable_Printer(new Default_Printer(true));
             if (isset($_SERVER['COLLISION_PRINTER_COMPACT'])) {
-                DefaultPrinter::compact(true);
+                Default_Printer::compact(true);
             }
-
             if (isset($_SERVER['COLLISION_PRINTER_PROFILE'])) {
-                DefaultPrinter::profile(true);
+                Default_Printer::profile(true);
             }
-
             $subscribers = [
                 // Configured
-                new class ($printer) extends Subscriber implements ConfiguredSubscriber {
+                new class($printer) extends Subscriber implements Configured_Subscriber
+                {
                     public function notify(Configured $event): void
                     {
-                        $this->printer()->setDecorated(
-                            $event->configuration()->colors()
-                        );
+                        $this->printer()->set_decorated($event->configuration()->colors());
                     }
                 },
-
                 // Test
-                new class ($printer) extends Subscriber implements PrintedUnexpectedOutputSubscriber {
-                    public function notify(PrintedUnexpectedOutput $event): void
+                new class($printer) extends Subscriber implements Printed_Unexpected_Output_Subscriber
+                {
+                    public function notify(Printed_Unexpected_Output $event): void
                     {
-                        $this->printer()->testPrintedUnexpectedOutput($event);
+                        $this->printer()->test_printed_unexpected_output($event);
                     }
                 },
-
                 // Test Runner
-                new class ($printer) extends Subscriber implements ExecutionStartedSubscriber {
-                    public function notify(ExecutionStarted $event): void
+                new class($printer) extends Subscriber implements Execution_Started_Subscriber
+                {
+                    public function notify(Execution_Started $event): void
                     {
-                        $this->printer()->testRunnerExecutionStarted($event);
+                        $this->printer()->test_runner_execution_started($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements ExecutionFinishedSubscriber {
-                    public function notify(ExecutionFinished $event): void
+                new class($printer) extends Subscriber implements Execution_Finished_Subscriber
+                {
+                    public function notify(Execution_Finished $event): void
                     {
-                        $this->printer()->testRunnerExecutionFinished($event);
+                        $this->printer()->test_runner_execution_finished($event);
                     }
                 },
-
                 // Test > Hook Methods
-
-                new class ($printer) extends Subscriber implements BeforeFirstTestMethodErroredSubscriber {
-                    public function notify(BeforeFirstTestMethodErrored $event): void
+                new class($printer) extends Subscriber implements Before_First_Test_Method_Errored_Subscriber
+                {
+                    public function notify(Before_First_Test_Method_Errored $event): void
                     {
-                        $this->printer()->testBeforeFirstTestMethodErrored($event);
+                        $this->printer()->test_before_first_test_method_errored($event);
                     }
                 },
-
                 // Test > Lifecycle ...
-
-                new class ($printer) extends Subscriber implements FinishedSubscriber {
+                new class($printer) extends Subscriber implements Finished_Subscriber
+                {
                     public function notify(Finished $event): void
                     {
-                        $this->printer()->testFinished($event);
+                        $this->printer()->test_finished($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PreparationStartedSubscriber {
-                    public function notify(PreparationStarted $event): void
+                new class($printer) extends Subscriber implements Preparation_Started_Subscriber
+                {
+                    public function notify(Preparation_Started $event): void
                     {
-                        $this->printer()->testPreparationStarted($event);
+                        $this->printer()->test_preparation_started($event);
                     }
                 },
-
                 // Test > Issues ...
-
-                new class ($printer) extends Subscriber implements ConsideredRiskySubscriber {
-                    public function notify(ConsideredRisky $event): void
+                new class($printer) extends Subscriber implements Considered_Risky_Subscriber
+                {
+                    public function notify(Considered_Risky $event): void
                     {
-                        $this->printer()->testConsideredRisky($event);
+                        $this->printer()->test_considered_risky($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements DeprecationTriggeredSubscriber {
-                    public function notify(DeprecationTriggered $event): void
+                new class($printer) extends Subscriber implements Deprecation_Triggered_Subscriber
+                {
+                    public function notify(Deprecation_Triggered $event): void
                     {
-                        $this->printer()->testDeprecationTriggered($event);
+                        $this->printer()->test_deprecation_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements TestRunnerDeprecationTriggeredSubscriber {
-                    public function notify(TestRunnerDeprecationTriggered $event): void
+                new class($printer) extends Subscriber implements Test_Runner_Deprecation_Triggered_Subscriber
+                {
+                    public function notify(Test_Runner_Deprecation_Triggered $event): void
                     {
-                        $this->printer()->testRunnerDeprecationTriggered($event);
+                        $this->printer()->test_runner_deprecation_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements TestRunnerWarningTriggeredSubscriber {
-                    public function notify(TestRunnerWarningTriggered $event): void
+                new class($printer) extends Subscriber implements Test_Runner_Warning_Triggered_Subscriber
+                {
+                    public function notify(Test_Runner_Warning_Triggered $event): void
                     {
-                        $this->printer()->testRunnerWarningTriggered($event);
+                        $this->printer()->test_runner_warning_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PhpDeprecationTriggeredSubscriber {
-                    public function notify(PhpDeprecationTriggered $event): void
+                new class($printer) extends Subscriber implements Php_Deprecation_Triggered_Subscriber
+                {
+                    public function notify(Php_Deprecation_Triggered $event): void
                     {
-                        $this->printer()->testPhpDeprecationTriggered($event);
+                        $this->printer()->test_php_deprecation_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PhpunitDeprecationTriggeredSubscriber {
-                    public function notify(PhpunitDeprecationTriggered $event): void
+                new class($printer) extends Subscriber implements Phpunit_Deprecation_Triggered_Subscriber
+                {
+                    public function notify(Phpunit_Deprecation_Triggered $event): void
                     {
-                        $this->printer()->testPhpunitDeprecationTriggered($event);
+                        $this->printer()->test_phpunit_deprecation_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PhpNoticeTriggeredSubscriber {
-                    public function notify(PhpNoticeTriggered $event): void
+                new class($printer) extends Subscriber implements Php_Notice_Triggered_Subscriber
+                {
+                    public function notify(Php_Notice_Triggered $event): void
                     {
-                        $this->printer()->testPhpNoticeTriggered($event);
+                        $this->printer()->test_php_notice_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PhpWarningTriggeredSubscriber {
-                    public function notify(PhpWarningTriggered $event): void
+                new class($printer) extends Subscriber implements Php_Warning_Triggered_Subscriber
+                {
+                    public function notify(Php_Warning_Triggered $event): void
                     {
-                        $this->printer()->testPhpWarningTriggered($event);
+                        $this->printer()->test_php_warning_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PhpunitWarningTriggeredSubscriber {
-                    public function notify(PhpunitWarningTriggered $event): void
+                new class($printer) extends Subscriber implements Phpunit_Warning_Triggered_Subscriber
+                {
+                    public function notify(Phpunit_Warning_Triggered $event): void
                     {
-                        $this->printer()->testPhpunitWarningTriggered($event);
+                        $this->printer()->test_phpunit_warning_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PhpunitErrorTriggeredSubscriber {
-                    public function notify(PhpunitErrorTriggered $event): void
+                new class($printer) extends Subscriber implements Phpunit_Error_Triggered_Subscriber
+                {
+                    public function notify(Phpunit_Error_Triggered $event): void
                     {
-                        $this->printer()->testPhpunitErrorTriggered($event);
+                        $this->printer()->test_phpunit_error_triggered($event);
                     }
                 },
-
                 // Test > Outcome ...
-
-                new class ($printer) extends Subscriber implements ErroredSubscriber {
+                new class($printer) extends Subscriber implements Errored_Subscriber
+                {
                     public function notify(Errored $event): void
                     {
-                        $this->printer()->testErrored($event);
+                        $this->printer()->test_errored($event);
                     }
                 },
-                new class ($printer) extends Subscriber implements FailedSubscriber {
+                new class($printer) extends Subscriber implements Failed_Subscriber
+                {
                     public function notify(Failed $event): void
                     {
-                        $this->printer()->testFailed($event);
+                        $this->printer()->test_failed($event);
                     }
                 },
-                new class ($printer) extends Subscriber implements MarkedIncompleteSubscriber {
-                    public function notify(MarkedIncomplete $event): void
+                new class($printer) extends Subscriber implements Marked_Incomplete_Subscriber
+                {
+                    public function notify(Marked_Incomplete $event): void
                     {
-                        $this->printer()->testMarkedIncomplete($event);
+                        $this->printer()->test_marked_incomplete($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements NoticeTriggeredSubscriber {
-                    public function notify(NoticeTriggered $event): void
+                new class($printer) extends Subscriber implements Notice_Triggered_Subscriber
+                {
+                    public function notify(Notice_Triggered $event): void
                     {
-                        $this->printer()->testNoticeTriggered($event);
+                        $this->printer()->test_notice_triggered($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements PassedSubscriber {
+                new class($printer) extends Subscriber implements Passed_Subscriber
+                {
                     public function notify(Passed $event): void
                     {
-                        $this->printer()->testPassed($event);
+                        $this->printer()->test_passed($event);
                     }
                 },
-                new class ($printer) extends Subscriber implements SkippedSubscriber {
+                new class($printer) extends Subscriber implements Skipped_Subscriber
+                {
                     public function notify(Skipped $event): void
                     {
-                        $this->printer()->testSkipped($event);
+                        $this->printer()->test_skipped($event);
                     }
                 },
-
-                new class ($printer) extends Subscriber implements WarningTriggeredSubscriber {
-                    public function notify(WarningTriggered $event): void
+                new class($printer) extends Subscriber implements Warning_Triggered_Subscriber
+                {
+                    public function notify(Warning_Triggered $event): void
                     {
-                        $this->printer()->testWarningTriggered($event);
+                        $this->printer()->test_warning_triggered($event);
                     }
                 },
             ];
-
-            Facade::instance()->registerSubscribers(...$subscribers);
+            Facade::instance()->register_subscribers(...$subscribers);
         }
-
         /**
          * Registers the subscriber on PHPUnit's facade.
          */
         public static function register(): void
         {
-            $shouldRegister = self::$registered === false
-                && isset($_SERVER['COLLISION_PRINTER']);
-
-            if ($shouldRegister) {
+            $should_register = self::$registered === false && isset($_SERVER['COLLISION_PRINTER']);
+            if ($should_register) {
                 self::$registered = true;
-
-                Facade::instance()->registerSubscriber(new self());
+                Facade::instance()->register_subscriber(new self());
             }
         }
     }

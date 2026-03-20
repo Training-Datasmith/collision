@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /**
  * This file is part of Collision.
  *
@@ -10,21 +9,19 @@ declare(strict_types=1);
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
-
-namespace NunoMaduro\Collision\Adapters\Laravel;
+namespace Nuno_Maduro\Collision\Adapters\Laravel;
 
 use Whoops\Exception\Inspector as BaseInspector;
-
 /**
  * @internal
  */
-final class Inspector extends BaseInspector
+final class Inspector extends Base_Inspector
 {
     /**
      * {@inheritdoc}
      */
-    protected function getTrace($e)
+    protected function get_trace($e)
     {
-        return $e->getTrace();
+        return $e->get_trace();
     }
 }

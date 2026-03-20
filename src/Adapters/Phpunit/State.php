@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Phpunit;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit;
-
-use NunoMaduro\Collision\Contracts\Adapters\Phpunit\HasPrintableTestCaseName;
-use PHPUnit\Event\Code\Test;
-use PHPUnit\Event\Code\TestMethod;
-
+use Nuno_Maduro\Collision\Contracts\Adapters\Phpunit\Has_Printable_Test_Case_Name;
+use Php_Unit\Event\Code\Test;
+use Php_Unit\Event\Code\Test_Method;
 /**
  * @internal
  */
@@ -18,246 +16,194 @@ final class State
      *
      * @var array<string, TestResult>
      */
-    public array $suiteTests = [];
-
+    public array $suite_tests = [];
     /**
      * The current test case class.
      */
-    public ?string $testCaseName;
-
+    public ?string $test_case_name;
     /**
      * The current test case tests.
      *
      * @var array<string, TestResult>
      */
-    public array $testCaseTests = [];
-
+    public array $test_case_tests = [];
     /**
      * The current test case tests.
      *
      * @var array<string, TestResult>
      */
-    public array $toBePrintedCaseTests = [];
-
+    public array $to_be_printed_case_tests = [];
     /**
      * Header printed.
      */
-    public bool $headerPrinted = false;
-
+    public bool $header_printed = false;
     /**
      * The state constructor.
      */
     public function __construct()
     {
-        $this->testCaseName = '';
+        $this->test_case_name = '';
     }
-
     /**
      * Checks if the given test already contains a result.
      */
-    public function existsInTestCase(Test $test): bool
+    public function exists_in_test_case(Test $test): bool
     {
-        return isset($this->testCaseTests[$test->id()]);
+        return isset($this->test_case_tests[$test->id()]);
     }
-
     /**
      * Adds the given test to the State.
      */
-    public function add(TestResult $test): void
+    public function add(Test_Result $test): void
     {
-        $this->testCaseName = $test->testCaseName;
-
-        $levels = array_flip([
-            TestResult::PASS,
-            TestResult::RUNS,
-            TestResult::TODO,
-            TestResult::SKIPPED,
-            TestResult::WARN,
-            TestResult::NOTICE,
-            TestResult::DEPRECATED,
-            TestResult::RISKY,
-            TestResult::INCOMPLETE,
-            TestResult::FAIL,
-        ]);
-
-        if (isset($this->testCaseTests[$test->id])) {
-            $existing = $this->testCaseTests[$test->id];
-
+        $this->test_case_name = $test->test_case_name;
+        $levels = array_flip([Test_Result::PASS, Test_Result::RUNS, Test_Result::TODO, Test_Result::SKIPPED, Test_Result::WARN, Test_Result::NOTICE, Test_Result::DEPRECATED, Test_Result::RISKY, Test_Result::INCOMPLETE, Test_Result::FAIL]);
+        if (isset($this->test_case_tests[$test->id])) {
+            $existing = $this->test_case_tests[$test->id];
             if ($levels[$existing->type] >= $levels[$test->type]) {
                 return;
             }
         }
-
-        $this->testCaseTests[$test->id] = $test;
-        $this->toBePrintedCaseTests[$test->id] = $test;
-
-        $this->suiteTests[$test->id] = $test;
+        $this->test_case_tests[$test->id] = $test;
+        $this->to_be_printed_case_tests[$test->id] = $test;
+        $this->suite_tests[$test->id] = $test;
     }
-
     /**
      * Sets the duration of the given test, and returns the test result.
      */
-    public function setDuration(Test $test, float $duration): TestResult
+    public function set_duration(Test $test, float $duration): Test_Result
     {
-        $result = $this->testCaseTests[$test->id()];
-
-        $result->setDuration($duration);
-
+        $result = $this->test_case_tests[$test->id()];
+        $result->set_duration($duration);
         return $result;
     }
-
     /**
      * Gets the test case title.
      */
-    public function getTestCaseTitle(): string
+    public function get_test_case_title(): string
     {
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type === TestResult::FAIL) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type === Test_Result::FAIL) {
                 return 'FAIL';
             }
         }
-
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type !== TestResult::PASS && $test->type !== TestResult::TODO && $test->type !== TestResult::DEPRECATED && $test->type !== TestResult::NOTICE) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type !== Test_Result::PASS && $test->type !== Test_Result::TODO && $test->type !== Test_Result::DEPRECATED && $test->type !== Test_Result::NOTICE) {
                 return 'WARN';
             }
         }
-
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type === TestResult::NOTICE) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type === Test_Result::NOTICE) {
                 return 'NOTI';
             }
         }
-
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type === TestResult::DEPRECATED) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type === Test_Result::DEPRECATED) {
                 return 'DEPR';
             }
         }
-
-        if ($this->todosCount() > 0 && (count($this->testCaseTests) === $this->todosCount())) {
+        if ($this->todos_count() > 0 && count($this->test_case_tests) === $this->todos_count()) {
             return 'TODO';
         }
-
         return 'PASS';
     }
-
     /**
      * Gets the number of tests that are todos.
      */
-    public function todosCount(): int
+    public function todos_count(): int
     {
-        return count(array_values(array_filter($this->testCaseTests, fn (TestResult $test): bool => $test->type === TestResult::TODO)));
+        return count(array_values(array_filter($this->test_case_tests, fn(Test_Result $test): bool => $test->type === Test_Result::TODO)));
     }
-
     /**
      * Gets the test case title color.
      */
-    public function getTestCaseFontColor(): string
+    public function get_test_case_font_color(): string
     {
-        if ($this->getTestCaseTitleColor() === 'blue') {
+        if ($this->get_test_case_title_color() === 'blue') {
             return 'white';
         }
-
-        return $this->getTestCaseTitle() === 'FAIL' ? 'default' : 'black';
+        return $this->get_test_case_title() === 'FAIL' ? 'default' : 'black';
     }
-
     /**
      * Gets the test case title color.
      */
-    public function getTestCaseTitleColor(): string
+    public function get_test_case_title_color(): string
     {
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type === TestResult::FAIL) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type === Test_Result::FAIL) {
                 return 'red';
             }
         }
-
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type !== TestResult::PASS && $test->type !== TestResult::TODO && $test->type !== TestResult::DEPRECATED) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type !== Test_Result::PASS && $test->type !== Test_Result::TODO && $test->type !== Test_Result::DEPRECATED) {
                 return 'yellow';
             }
         }
-
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type === TestResult::DEPRECATED) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type === Test_Result::DEPRECATED) {
                 return 'yellow';
             }
         }
-
-        foreach ($this->testCaseTests as $test) {
-            if ($test->type === TestResult::TODO) {
+        foreach ($this->test_case_tests as $test) {
+            if ($test->type === Test_Result::TODO) {
                 return 'blue';
             }
         }
-
         return 'green';
     }
-
     /**
      * Returns the number of tests on the current test case.
      */
-    public function testCaseTestsCount(): int
+    public function test_case_tests_count(): int
     {
-        return count($this->testCaseTests);
+        return count($this->test_case_tests);
     }
-
     /**
      * Returns the number of tests on the complete test suite.
      */
-    public function testSuiteTestsCount(): int
+    public function test_suite_tests_count(): int
     {
-        return count($this->suiteTests);
+        return count($this->suite_tests);
     }
-
     /**
      * Checks if the given test case is different from the current one.
      */
-    public function testCaseHasChanged(TestMethod $test): bool
+    public function test_case_has_changed(Test_Method $test): bool
     {
-        return self::getPrintableTestCaseName($test) !== $this->testCaseName;
+        return self::get_printable_test_case_name($test) !== $this->test_case_name;
     }
-
     /**
      * Moves the an new test case.
      */
-    public function moveTo(TestMethod $test): void
+    public function move_to(Test_Method $test): void
     {
-        $this->testCaseName = self::getPrintableTestCaseName($test);
-
-        $this->testCaseTests = [];
-
-        $this->headerPrinted = false;
+        $this->test_case_name = self::get_printable_test_case_name($test);
+        $this->test_case_tests = [];
+        $this->header_printed = false;
     }
-
     /**
      * Foreach test in the test case.
      */
-    public function eachTestCaseTests(callable $callback): void
+    public function each_test_case_tests(callable $callback): void
     {
-        foreach ($this->toBePrintedCaseTests as $test) {
+        foreach ($this->to_be_printed_case_tests as $test) {
             $callback($test);
         }
-
-        $this->toBePrintedCaseTests = [];
+        $this->to_be_printed_case_tests = [];
     }
-
-    public function countTestsInTestSuiteBy(string $type): int
+    public function count_tests_in_test_suite_by(string $type): int
     {
-        return count(array_filter($this->suiteTests, fn (TestResult $testResult) => $testResult->type === $type));
+        return count(array_filter($this->suite_tests, fn(Test_Result $test_result) => $test_result->type === $type));
     }
-
     /**
      * Returns the printable test case name from the given `TestCase`.
      */
-    public static function getPrintableTestCaseName(TestMethod $test): string
+    public static function get_printable_test_case_name(Test_Method $test): string
     {
-        $className = explode('::', $test->id())[0];
-
-        if (is_subclass_of($className, HasPrintableTestCaseName::class)) {
-            return $className::getPrintableTestCaseName();
+        $class_name = explode('::', $test->id())[0];
+        if (is_subclass_of($class_name, Has_Printable_Test_Case_Name::class)) {
+            return $class_name::get_printable_test_case_name();
         }
-
-        return $className;
+        return $class_name;
     }
 }

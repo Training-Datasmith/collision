@@ -1,21 +1,18 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Laravel;
 
-namespace NunoMaduro\Collision\Adapters\Laravel;
-
-use NunoMaduro\Collision\Contracts\SolutionsRepository;
-use Spatie\ErrorSolutions\Contracts\SolutionProviderRepository;
-use Spatie\Ignition\Contracts\SolutionProviderRepository as IgnitionSolutionProviderRepository;
+use Nuno_Maduro\Collision\Contracts\Solutions_Repository;
+use Spatie\Error_Solutions\Contracts\Solution_Provider_Repository;
+use Spatie\Ignition\Contracts\Solution_Provider_Repository as IgnitionSolutionProviderRepository;
 use Throwable;
-
 /**
  * @internal
  */
-final class IgnitionSolutionsRepository implements SolutionsRepository
+final class Ignition_Solutions_Repository implements Solutions_Repository
 {
     // @phpstan-ignore-line
-
     /**
      * IgnitionSolutionsRepository constructor.
      */
@@ -23,15 +20,16 @@ final class IgnitionSolutionsRepository implements SolutionsRepository
         /**
          * Holds an instance of ignition solutions provider repository.
          */
-        protected IgnitionSolutionProviderRepository|SolutionProviderRepository $solutionProviderRepository
-    ) {
+        protected Ignition_Solution_Provider_Repository|Solution_Provider_Repository $solution_provider_repository
+    )
+    {
     }
-
     /**
      * {@inheritdoc}
      */
-    public function getFromThrowable(Throwable $throwable): array // @phpstan-ignore-line
+    public function get_from_throwable(Throwable $throwable): array
     {
-        return $this->solutionProviderRepository->getSolutionsForThrowable($throwable); // @phpstan-ignore-line
+        return $this->solution_provider_repository->get_solutions_for_throwable($throwable);
+        // @phpstan-ignore-line
     }
 }

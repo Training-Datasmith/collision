@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Exceptions;
 
-namespace NunoMaduro\Collision\Exceptions;
-
-use PHPUnit\Framework\Exception;
-
+use Php_Unit\Framework\Exception;
 /**
  * @internal
  */
-final class TestOutcome extends Exception
+final class Test_Outcome extends Exception
 {
     // ...
 }

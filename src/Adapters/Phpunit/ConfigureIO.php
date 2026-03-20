@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /**
  * This file is part of Collision.
  *
@@ -10,18 +9,16 @@ declare(strict_types=1);
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
  */
+namespace Nuno_Maduro\Collision\Adapters\Phpunit;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit;
-
-use ReflectionObject;
+use Reflection_Object;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\Input_Interface;
 use Symfony\Component\Console\Output\Output;
-
 /**
  * @internal
  */
-final class ConfigureIO
+final class Configure_Io
 {
     /**
      * Configures both given input and output with
@@ -29,12 +26,11 @@ final class ConfigureIO
      *
      * @throws \ReflectionException
      */
-    public static function of(InputInterface $input, Output $output): void
+    public static function of(Input_Interface $input, Output $output): void
     {
         $application = new Application();
-        $reflector = new ReflectionObject($application);
-        $method = $reflector->getMethod('configureIO');
-
+        $reflector = new Reflection_Object($application);
+        $method = $reflector->get_method('configureIO');
         $method->invoke($application, $input, $output);
     }
 }

@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
-namespace NunoMaduro\Collision\Contracts;
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Contracts;
 
 /**
  * @internal
  */
-interface RenderlessEditor
+interface Renderless_Editor
 {
 }

@@ -1,203 +1,146 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Phpunit;
 
-namespace NunoMaduro\Collision\Adapters\Phpunit;
-
-use NunoMaduro\Collision\Contracts\Adapters\Phpunit\HasPrintableTestCaseName;
-use NunoMaduro\Collision\Exceptions\ShouldNotHappen;
-use PHPUnit\Event\Code\Test;
-use PHPUnit\Event\Code\TestMethod;
-use PHPUnit\Event\Code\Throwable;
-use PHPUnit\Event\Test\BeforeFirstTestMethodErrored;
-
+use Nuno_Maduro\Collision\Contracts\Adapters\Phpunit\Has_Printable_Test_Case_Name;
+use Nuno_Maduro\Collision\Exceptions\Should_Not_Happen;
+use Php_Unit\Event\Code\Test;
+use Php_Unit\Event\Code\Test_Method;
+use Php_Unit\Event\Code\Throwable;
+use Php_Unit\Event\Test\Before_First_Test_Method_Errored;
 /**
  * @internal
  */
-final class TestResult
+final class Test_Result
 {
     public const FAIL = 'failed';
-
     public const SKIPPED = 'skipped';
-
     public const INCOMPLETE = 'incomplete';
-
     public const TODO = 'todo';
-
     public const RISKY = 'risky';
-
     public const DEPRECATED = 'deprecated';
-
     public const NOTICE = 'notice';
-
     public const WARN = 'warnings';
-
     public const RUNS = 'pending';
-
     public const PASS = 'passed';
-
     public float $duration;
-
     public string $warning = '';
-
-    public string $warningSource = '';
-
+    public string $warning_source = '';
     /**
      * Creates a new TestResult instance.
      */
-    private function __construct(public string $id, public string $testCaseName, public string $description, public string $type, public string $icon, public string $compactIcon, public string $color, public string $compactColor, public array $context, public ?Throwable $throwable = null)
+    private function __construct(public string $id, public string $test_case_name, public string $description, public string $type, public string $icon, public string $compact_icon, public string $color, public string $compact_color, public array $context, public ?Throwable $throwable = null)
     {
         $this->duration = 0.0;
-
-        $asWarning = $this->type === TestResult::WARN
-            || $this->type === TestResult::RISKY
-            || $this->type === TestResult::SKIPPED
-            || $this->type === TestResult::DEPRECATED
-            || $this->type === TestResult::NOTICE
-            || $this->type === TestResult::INCOMPLETE;
-
-        if ($this->throwable instanceof Throwable && $asWarning) {
-            if (in_array($this->type, [TestResult::DEPRECATED, TestResult::NOTICE])) {
-                foreach (explode("\n", $this->throwable->stackTrace()) as $line) {
+        $as_warning = $this->type === Test_Result::WARN || $this->type === Test_Result::RISKY || $this->type === Test_Result::SKIPPED || $this->type === Test_Result::DEPRECATED || $this->type === Test_Result::NOTICE || $this->type === Test_Result::INCOMPLETE;
+        if ($this->throwable instanceof Throwable && $as_warning) {
+            if (in_array($this->type, [Test_Result::DEPRECATED, Test_Result::NOTICE])) {
+                foreach (explode("\n", $this->throwable->stack_trace()) as $line) {
                     if (!str_contains($line, 'vendor/nunomaduro/collision')) {
-                        $this->warningSource = str_replace(getcwd().'/', '', $line);
-
+                        $this->warning_source = str_replace(getcwd() . '/', '', $line);
                         break;
                     }
                 }
             }
-
             $this->warning .= trim((string) preg_replace("/\r|\n/", ' ', $this->throwable->message()));
-
             // pest specific
             $this->warning = str_replace('__pest_evaluable_', '', $this->warning);
             $this->warning = str_replace('This test depends on "P\\', 'This test depends on "', $this->warning);
         }
     }
-
     /**
      * Sets the telemetry information.
      */
-    public function setDuration(float $duration): void
+    public function set_duration(float $duration): void
     {
         $this->duration = $duration;
     }
-
     /**
      * Creates a new test from the given test case.
      */
-    public static function fromTestCase(Test $test, string $type, ?Throwable $throwable = null): self
+    public static function from_test_case(Test $test, string $type, ?Throwable $throwable = null): self
     {
-        if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen();
+        if (!$test instanceof Test_Method) {
+            throw new Should_Not_Happen();
         }
-
-        if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {
-            $testCaseName = $test->className()::getPrintableTestCaseName();
-            $context = method_exists($test->className(), 'getPrintableContext') ? $test->className()::getPrintableContext() : [];
+        if (is_subclass_of($test->class_name(), Has_Printable_Test_Case_Name::class)) {
+            $test_case_name = $test->class_name()::get_printable_test_case_name();
+            $context = method_exists($test->class_name(), 'getPrintableContext') ? $test->class_name()::get_printable_context() : [];
         } else {
-            $testCaseName = $test->className();
+            $test_case_name = $test->class_name();
             $context = [];
         }
-
-        $description = self::makeDescription($test);
-
-        $icon = self::makeIcon($type);
-
-        $compactIcon = self::makeCompactIcon($type);
-
-        $color = self::makeColor($type);
-
-        $compactColor = self::makeCompactColor($type);
-
-        return new self($test->id(), $testCaseName, $description, $type, $icon, $compactIcon, $color, $compactColor, $context, $throwable);
+        $description = self::make_description($test);
+        $icon = self::make_icon($type);
+        $compact_icon = self::make_compact_icon($type);
+        $color = self::make_color($type);
+        $compact_color = self::make_compact_color($type);
+        return new self($test->id(), $test_case_name, $description, $type, $icon, $compact_icon, $color, $compact_color, $context, $throwable);
     }
-
     /**
      * Creates a new test from the given Pest Parallel Test Case.
      */
-    public static function fromPestParallelTestCase(Test $test, string $type, ?Throwable $throwable = null): self
+    public static function from_pest_parallel_test_case(Test $test, string $type, ?Throwable $throwable = null): self
     {
-        if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen();
+        if (!$test instanceof Test_Method) {
+            throw new Should_Not_Happen();
         }
-
-        if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {
-            $testCaseName = $test->className()::getPrintableTestCaseName();
-            $description = $test->testDox()->prettifiedMethodName();
+        if (is_subclass_of($test->class_name(), Has_Printable_Test_Case_Name::class)) {
+            $test_case_name = $test->class_name()::get_printable_test_case_name();
+            $description = $test->test_dox()->prettified_method_name();
         } else {
-            $testCaseName = $test->className();
-            $description = self::makeDescription($test);
+            $test_case_name = $test->class_name();
+            $description = self::make_description($test);
         }
-
-        $icon = self::makeIcon($type);
-
-        $compactIcon = self::makeCompactIcon($type);
-
-        $color = self::makeColor($type);
-
-        $compactColor = self::makeCompactColor($type);
-
-        return new self($test->id(), $testCaseName, $description, $type, $icon, $compactIcon, $color, $compactColor, [], $throwable);
+        $icon = self::make_icon($type);
+        $compact_icon = self::make_compact_icon($type);
+        $color = self::make_color($type);
+        $compact_color = self::make_compact_color($type);
+        return new self($test->id(), $test_case_name, $description, $type, $icon, $compact_icon, $color, $compact_color, [], $throwable);
     }
-
     /**
      * Creates a new test from the given test case.
      */
-    public static function fromBeforeFirstTestMethodErrored(BeforeFirstTestMethodErrored $event): self
+    public static function from_before_first_test_method_errored(Before_First_Test_Method_Errored $event): self
     {
-        if (is_subclass_of($event->testClassName(), HasPrintableTestCaseName::class)) {
-            $testCaseName = $event->testClassName()::getPrintableTestCaseName();
+        if (is_subclass_of($event->test_class_name(), Has_Printable_Test_Case_Name::class)) {
+            $test_case_name = $event->test_class_name()::get_printable_test_case_name();
         } else {
-            $testCaseName = $event->testClassName();
+            $test_case_name = $event->test_class_name();
         }
-
         $description = '';
-
-        $icon = self::makeIcon(self::FAIL);
-
-        $compactIcon = self::makeCompactIcon(self::FAIL);
-
-        $color = self::makeColor(self::FAIL);
-
-        $compactColor = self::makeCompactColor(self::FAIL);
-
-        return new self($testCaseName, $testCaseName, $description, self::FAIL, $icon, $compactIcon, $color, $compactColor, [], $event->throwable());
+        $icon = self::make_icon(self::FAIL);
+        $compact_icon = self::make_compact_icon(self::FAIL);
+        $color = self::make_color(self::FAIL);
+        $compact_color = self::make_compact_color(self::FAIL);
+        return new self($test_case_name, $test_case_name, $description, self::FAIL, $icon, $compact_icon, $color, $compact_color, [], $event->throwable());
     }
-
     /**
      * Get the test case description.
      */
-    public static function makeDescription(TestMethod $test): string
+    public static function make_description(Test_Method $test): string
     {
-        if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {
-            return $test->className()::getLatestPrintableTestCaseMethodName();
+        if (is_subclass_of($test->class_name(), Has_Printable_Test_Case_Name::class)) {
+            return $test->class_name()::get_latest_printable_test_case_method_name();
         }
-
         $name = $test->name();
-
         // First, lets replace underscore by spaces.
         $name = str_replace('_', ' ', $name);
-
         // Then, replace upper cases by spaces.
         $name = (string) preg_replace('/([A-Z])/', ' $1', $name);
-
         // Finally, if it starts with `test`, we remove it.
         $name = (string) preg_replace('/^test/', '', $name);
-
         // Removes spaces
         $name = trim($name);
-
         // Lower case everything
         $name = mb_strtolower($name);
-
         return $name;
     }
-
     /**
      * Get the test case icon.
      */
-    public static function makeIcon(string $type): string
+    public static function make_icon(string $type): string
     {
         return match ($type) {
             self::FAIL => '⨯',
@@ -209,11 +152,10 @@ final class TestResult
             default => '✓',
         };
     }
-
     /**
      * Get the test case compact icon.
      */
-    public static function makeCompactIcon(string $type): string
+    public static function make_compact_icon(string $type): string
     {
         return match ($type) {
             self::FAIL => '⨯',
@@ -225,11 +167,10 @@ final class TestResult
             default => '.',
         };
     }
-
     /**
      * Get the test case compact color.
      */
-    public static function makeCompactColor(string $type): string
+    public static function make_compact_color(string $type): string
     {
         return match ($type) {
             self::FAIL => 'red',
@@ -238,11 +179,10 @@ final class TestResult
             default => 'gray',
         };
     }
-
     /**
      * Get the test case color.
      */
-    public static function makeColor(string $type): string
+    public static function make_color(string $type): string
     {
         return match ($type) {
             self::TODO => 'cyan',

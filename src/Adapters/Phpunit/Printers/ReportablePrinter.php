@@ -1,37 +1,33 @@
 <?php
 
-declare(strict_types=1);
-
-namespace NunoMaduro\Collision\Adapters\Phpunit\Printers;
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Phpunit\Printers;
 
 use Throwable;
-
 /**
  * @internal
  *
  * @mixin DefaultPrinter
  */
-final readonly class ReportablePrinter
+final readonly class Reportable_Printer
 {
     /**
      * Creates a new Printer instance.
      */
-    public function __construct(private DefaultPrinter $printer)
+    public function __construct(private Default_Printer $printer)
     {
         // ..
     }
-
     /**
      * Calls the original method, but reports any errors to the reporter.
      */
     public function __call(string $name, array $arguments): mixed
     {
         try {
-            return $this->printer->$name(...$arguments);
+            return $this->printer->{$name}(...$arguments);
         } catch (Throwable $throwable) {
             $this->printer->report($throwable);
         }
-
         exit(1);
     }
 }

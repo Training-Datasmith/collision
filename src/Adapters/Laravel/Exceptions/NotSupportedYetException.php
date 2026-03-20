@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision\Adapters\Laravel\Exceptions;
 
-namespace NunoMaduro\Collision\Adapters\Laravel\Exceptions;
-
-use NunoMaduro\Collision\Contracts\RenderlessEditor;
-use NunoMaduro\Collision\Contracts\RenderlessTrace;
+use Nuno_Maduro\Collision\Contracts\Renderless_Editor;
+use Nuno_Maduro\Collision\Contracts\Renderless_Trace;
 use RuntimeException;
-
 /**
  * @internal
  */
-final class NotSupportedYetException extends RuntimeException implements RenderlessEditor, RenderlessTrace
+final class Not_Supported_Yet_Exception extends RuntimeException implements Renderless_Editor, Renderless_Trace
 {
 }

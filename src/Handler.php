@@ -1,24 +1,21 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Nuno_Maduro\Collision;
 
-namespace NunoMaduro\Collision;
-
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\Output_Interface;
 use Whoops\Handler\Handler as AbstractHandler;
-
 /**
  * @internal
  *
  * @see \Tests\Unit\HandlerTest
  */
-final class Handler extends AbstractHandler
+final class Handler extends Abstract_Handler
 {
     /**
      * Holds an instance of the writer.
      */
     private readonly Writer $writer;
-
     /**
      * Creates an instance of the Handler.
      */
@@ -26,31 +23,27 @@ final class Handler extends AbstractHandler
     {
         $this->writer = $writer ?: new Writer();
     }
-
     /**
      * {@inheritdoc}
      */
     public function handle(): int
     {
-        $this->writer->write($this->getInspector()); // @phpstan-ignore-line
-
+        $this->writer->write($this->get_inspector());
+        // @phpstan-ignore-line
         return self::QUIT;
     }
-
     /**
      * {@inheritdoc}
      */
-    public function setOutput(OutputInterface $output): self
+    public function set_output(Output_Interface $output): self
     {
-        $this->writer->setOutput($output);
-
+        $this->writer->set_output($output);
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
-    public function getWriter(): Writer
+    public function get_writer(): Writer
     {
         return $this->writer;
     }
