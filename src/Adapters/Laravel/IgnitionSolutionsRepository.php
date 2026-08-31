@@ -14,8 +14,6 @@ use Throwable;
  */
 final class IgnitionSolutionsRepository implements SolutionsRepository
 {
-    // @phpstan-ignore-line
-
     /**
      * IgnitionSolutionsRepository constructor.
      */
@@ -23,9 +21,8 @@ final class IgnitionSolutionsRepository implements SolutionsRepository
         /**
          * Holds an instance of ignition solutions provider repository.
          */
-        protected IgnitionSolutionProviderRepository|SolutionProviderRepository $solutionProviderRepository
-    ) {
-    }
+        protected IgnitionSolutionProviderRepository|SolutionProviderRepository $solutionProviderRepository // @phpstan-ignore-line
+    ) {}
 
     /**
      * {@inheritdoc}

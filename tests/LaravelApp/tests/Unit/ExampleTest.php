@@ -63,7 +63,7 @@ class ExampleTest extends TestCase
     #[Group('deprecations')]
     public function test_deprecation()
     {
-        str_contains(null, null);
+        utf8_encode('test');
 
         $this->assertTrue(true);
     }

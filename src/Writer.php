@@ -11,8 +11,10 @@ use NunoMaduro\Collision\Contracts\RenderlessTrace;
 use NunoMaduro\Collision\Contracts\SolutionsRepository;
 use NunoMaduro\Collision\Exceptions\TestException;
 use NunoMaduro\Collision\SolutionsRepositories\NullSolutionsRepository;
+use Spatie\Ignition\Contracts\Solution;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tests\Unit\WriterTest;
 use Throwable;
 use Whoops\Exception\Frame;
 use Whoops\Exception\Inspector;
@@ -20,7 +22,7 @@ use Whoops\Exception\Inspector;
 /**
  * @internal
  *
- * @see \Tests\Unit\WriterTest
+ * @see WriterTest
  */
 final class Writer
 {
@@ -81,10 +83,10 @@ final class Writer
         ?ArgumentFormatter $argumentFormatter = null,
         ?Highlighter $highlighter = null
     ) {
-        $this->solutionsRepository = $solutionsRepository ?: new NullSolutionsRepository();
-        $this->output = $output ?: new ConsoleOutput();
-        $this->argumentFormatter = $argumentFormatter ?: new ArgumentFormatter();
-        $this->highlighter = $highlighter ?: new Highlighter();
+        $this->solutionsRepository = $solutionsRepository ?: new NullSolutionsRepository;
+        $this->output = $output ?: new ConsoleOutput;
+        $this->argumentFormatter = $argumentFormatter ?: new ArgumentFormatter;
+        $this->highlighter = $highlighter ?: new Highlighter;
     }
 
     public function write(Inspector $inspector): void
@@ -229,16 +231,20 @@ final class Writer
             : [];
 
         foreach ($solutions as $solution) {
-            /** @var \Spatie\Ignition\Contracts\Solution $solution */
+            /** @var Solution $solution */
             $title = $solution->getSolutionTitle();  // @phpstan-ignore-line
             $description = $solution->getSolutionDescription();  // @phpstan-ignore-line
             $links = $solution->getDocumentationLinks();  // @phpstan-ignore-line
 
-            $description = trim((string) preg_replace("/\n/", "\n    ", (string) $description));
+            if (! is_string($title) || ! is_string($description) || ! is_array($links)) {
+                continue;
+            }
+
+            $description = trim(preg_replace("/\n/", "\n    ", $description) ?? $description);
 
             $this->render(sprintf(
                 '<fg=cyan;options=bold>i</>   <fg=default;options=bold>%s</>: %s %s',
-                rtrim((string) $title, '.'),
+                rtrim($title, '.'),
                 $description,
                 implode(', ', array_map(fn (string $link) => sprintf("\n      <fg=gray>%s</>", $link), $links))
             ));
@@ -281,7 +287,9 @@ final class Writer
         }
 
         foreach ($frames as $i => $frame) {
-            if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE && str_contains((string) $frame->getFile(), '/vendor/')) {
+            $frameFile = $frame->getFile();
+
+            if ($frameFile !== null && $this->output->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE && str_contains($frameFile, '/vendor/')) {
                 $vendorFrames++;
 
                 continue;

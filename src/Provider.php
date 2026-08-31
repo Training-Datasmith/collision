@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace NunoMaduro\Collision;
 
+use Tests\Unit\ProviderTest;
 use Whoops\Run;
 use Whoops\RunInterface;
 
 /**
  * @internal
  *
- * @see \Tests\Unit\ProviderTest
+ * @see ProviderTest
  */
 final readonly class Provider
 {
@@ -29,8 +30,8 @@ final readonly class Provider
      */
     public function __construct(?RunInterface $run = null, ?Handler $handler = null)
     {
-        $this->run = $run ?: new Run();
-        $this->handler = $handler ?: new Handler();
+        $this->run = $run ?: new Run;
+        $this->handler = $handler ?: new Handler;
     }
 
     /**

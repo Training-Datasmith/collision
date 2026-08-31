@@ -59,7 +59,7 @@ final class TestResult
         if ($this->throwable instanceof Throwable && $asWarning) {
             if (in_array($this->type, [TestResult::DEPRECATED, TestResult::NOTICE])) {
                 foreach (explode("\n", $this->throwable->stackTrace()) as $line) {
-                    if (!str_contains($line, 'vendor/nunomaduro/collision')) {
+                    if (! str_contains($line, 'vendor/nunomaduro/collision')) {
                         $this->warningSource = str_replace(getcwd().'/', '', $line);
 
                         break;
@@ -89,7 +89,7 @@ final class TestResult
     public static function fromTestCase(Test $test, string $type, ?Throwable $throwable = null): self
     {
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen();
+            throw new ShouldNotHappen;
         }
 
         if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {
@@ -119,7 +119,7 @@ final class TestResult
     public static function fromPestParallelTestCase(Test $test, string $type, ?Throwable $throwable = null): self
     {
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen();
+            throw new ShouldNotHappen;
         }
 
         if (is_subclass_of($test->className(), HasPrintableTestCaseName::class)) {

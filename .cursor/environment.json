@@ -1,0 +1,4 @@
+{
+  "start": "sudo service docker start",
+  "install": "bash scripts/cloud-grind-setup.sh"
+}

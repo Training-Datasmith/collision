@@ -21,9 +21,7 @@ final readonly class TestException implements \Stringable
     public function __construct(
         private Throwable $throwable,
         private bool $isVerbose
-    ) {
-
-    }
+    ) {}
 
     public function getThrowable(): Throwable
     {
@@ -77,13 +75,16 @@ final readonly class TestException implements \Stringable
         return $message;
     }
 
+    /**
+     * @param  array<int, array{0: string, 1: int}>  $matches
+     */
     private function shortenMessage(array $matches, string $key): string
     {
         $actual = $matches[1][0];
         $expected = $matches[2][0];
 
-        $actualExploded = explode(PHP_EOL, (string) $actual);
-        $expectedExploded = explode(PHP_EOL, (string) $expected);
+        $actualExploded = explode(PHP_EOL, $actual);
+        $expectedExploded = explode(PHP_EOL, $expected);
 
         if (($countActual = count($actualExploded)) > 4 && ! $this->isVerbose) {
             $actualExploded = array_slice($actualExploded, 0, 3);
@@ -145,19 +146,22 @@ final readonly class TestException implements \Stringable
         return (int) $this->getTrace()[0]['line'];
     }
 
+    /**
+     * @return array<int, array{file: string, line: string}>
+     */
     public function getTrace(): array
     {
         $frames = explode("\n", $this->getTraceAsString());
 
-        $frames = array_filter($frames, fn ($trace): bool => $trace !== '');
+        $frames = array_filter($frames, fn (string $trace): bool => $trace !== '');
 
-        return array_map(function ($trace): ?array {
+        $traces = array_map(function (string $trace): ?array {
             if (trim($trace) === '') {
                 return null;
             }
 
             $parts = explode(':', $trace);
-            $line = array_pop($parts);
+            $line = (string) array_pop($parts);
             $file = implode(':', $parts);
 
             return [
@@ -165,6 +169,8 @@ final readonly class TestException implements \Stringable
                 'line' => $line,
             ];
         }, $frames);
+
+        return array_values(array_filter($traces, fn (?array $trace): bool => $trace !== null));
     }
 
     public function getTraceAsString(): string

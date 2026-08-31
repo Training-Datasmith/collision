@@ -166,7 +166,7 @@ EOF,
         $output = $this->runCollisionTests([
             '--filter',
             'non_existing_test',
-        ]);
+        ], 1);
 
         $this->assertConsoleOutputContainsString(
             'No tests found.',
@@ -185,18 +185,18 @@ EOF,
         $this->assertConsoleOutputContainsString(<<<EOF
   Failed asserting that true is false.
 
-  at tests/LaravelApp/tests/Unit/ExampleTest.php:15
-     11▕ {
-     12▕     #[Group('fail')]
-     13▕     public function test_fail_example()
-     14▕     {
-  ➜  15▕         $code
-     16▕     }
-     17▕$space
-     18▕     #[Group('todo')]
-     19▕     public function test_todo_example()
+  at tests/LaravelApp/tests/Unit/ExampleTest.php:17
+     13▕ {
+     14▕     #[Group('fail')]
+     15▕     public function test_fail_example()
+     16▕     {
+  ➜  17▕         $code
+     18▕     }
+     19▕$space
+     20▕     #[Group('todo')]
+     21▕     public function test_todo_example()
 
-  1   tests/LaravelApp/tests/Unit/ExampleTest.php:15
+  1   tests/LaravelApp/tests/Unit/ExampleTest.php:17
 
 EOF
             , $output);

@@ -11,6 +11,7 @@ use NunoMaduro\Collision\Adapters\Phpunit\Support\ResultReflection;
 use NunoMaduro\Collision\Adapters\Phpunit\TestResult;
 use NunoMaduro\Collision\Exceptions\ShouldNotHappen;
 use NunoMaduro\Collision\Exceptions\TestOutcome;
+use Pest\Collision\Events;
 use Pest\Result;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Code\ThrowableBuilder;
@@ -35,6 +36,7 @@ use PHPUnit\Event\Test\Skipped;
 use PHPUnit\Event\Test\WarningTriggered;
 use PHPUnit\Event\TestRunner\DeprecationTriggered as TestRunnerDeprecationTriggered;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
+use PHPUnit\Event\TestRunner\ExecutionStarted;
 use PHPUnit\Event\TestRunner\WarningTriggered as TestRunnerWarningTriggered;
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedWithMessageException;
@@ -97,15 +99,15 @@ final class DefaultPrinter
     {
         $this->output = new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, $colors);
 
-        ConfigureIO::of(new ArgvInput(), $this->output);
+        ConfigureIO::of(new ArgvInput, $this->output);
 
-        class_exists(\Pest\Collision\Events::class) && \Pest\Collision\Events::setOutput($this->output);
+        class_exists(Events::class) && Events::setOutput($this->output);
 
         self::$verbose = $this->output->isVerbose();
 
         $this->style = new Style($this->output);
 
-        $this->state = new State();
+        $this->state = new State;
     }
 
     /**
@@ -151,7 +153,7 @@ final class DefaultPrinter
     /**
      * Listen to the runner execution started event.
      */
-    public function testRunnerExecutionStarted(): void
+    public function testRunnerExecutionStarted(ExecutionStarted $event): void
     {
         // ..
     }
@@ -166,7 +168,7 @@ final class DefaultPrinter
         $test = $event->test();
 
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen();
+            throw new ShouldNotHappen;
         }
 
         if (! $this->state->existsInTestCase($event->test())) {
@@ -195,7 +197,7 @@ final class DefaultPrinter
         $test = $event->test();
 
         if (! $test instanceof TestMethod) {
-            throw new ShouldNotHappen();
+            throw new ShouldNotHappen;
         }
 
         if ($this->state->testCaseHasChanged($test)) {

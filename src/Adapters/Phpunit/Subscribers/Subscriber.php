@@ -28,8 +28,7 @@ abstract class Subscriber
          * The printer instance.
          */
         private readonly ReportablePrinter $printer
-    ) {
-    }
+    ) {}
 
     /**
      * Returns the printer instance.

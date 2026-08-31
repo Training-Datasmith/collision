@@ -79,7 +79,7 @@ final class Highlighter
      */
     public function __construct(?ConsoleColor $color = null, bool $UTF8 = true)
     {
-        $this->color = $color ?: new ConsoleColor();
+        $this->color = $color ?: new ConsoleColor;
 
         foreach (self::DEFAULT_THEME as $name => $styles) {
             if (! $this->color->hasTheme($name)) {
@@ -205,13 +205,17 @@ final class Highlighter
         return $output;
     }
 
+    /**
+     * @param  array<int, array{0: int|string, 1: string}>  $tokens
+     * @return array<int, array<int, array{0: int|string, 1: string}>>
+     */
     private function splitToLines(array $tokens): array
     {
         $lines = [];
 
         $line = [];
         foreach ($tokens as $token) {
-            foreach (explode("\n", (string) $token[1]) as $count => $tokenLine) {
+            foreach (explode("\n", $token[1]) as $count => $tokenLine) {
                 if ($count > 0) {
                     $lines[] = $line;
                     $line = [];

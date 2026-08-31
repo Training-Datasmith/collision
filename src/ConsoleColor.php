@@ -103,13 +103,14 @@ class ConsoleColor
             } elseif ($this->isValidStyle($s)) {
                 $sequences[] = $this->styleSequence($s);
             } else {
-                throw new ShouldNotHappen();
+                throw new ShouldNotHappen;
             }
         }
 
-        $sequences = array_filter($sequences, fn ($val) => $val !== null);
+        /** @var array<string> $sequences */
+        $sequences = array_values(array_filter($sequences, fn (?string $val): bool => $val !== null));
 
-        if (empty($sequences)) {
+        if ($sequences === []) {
             return $text;
         }
 
@@ -215,7 +216,9 @@ class ConsoleColor
             return null;
         }
 
-        preg_match(self::COLOR256_REGEXP, $style, $matches);
+        if (! preg_match(self::COLOR256_REGEXP, $style, $matches)) {
+            return null;
+        }
 
         $type = $matches[1] === 'bg_' ? self::BACKGROUND : self::FOREGROUND;
         $value = $matches[2];

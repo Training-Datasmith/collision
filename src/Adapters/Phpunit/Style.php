@@ -11,6 +11,7 @@ use NunoMaduro\Collision\Exceptions\ShouldNotHappen;
 use NunoMaduro\Collision\Exceptions\TestException;
 use NunoMaduro\Collision\Exceptions\TestOutcome;
 use NunoMaduro\Collision\Writer;
+use Pest\Collision\Events;
 use Pest\Expectation;
 use PHPUnit\Event\Code\Throwable;
 use PHPUnit\Event\Telemetry\Info;
@@ -24,16 +25,13 @@ use ReflectionClass;
 use ReflectionFunction;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Termwind\Terminal;
+use Whoops\Exception\Frame;
+use Whoops\Exception\Inspector;
 
 use function Termwind\render;
 use function Termwind\renderUsing;
-
-use Termwind\Terminal;
-
 use function Termwind\terminal;
-
-use Whoops\Exception\Frame;
-use Whoops\Exception\Inspector;
 
 /**
  * @internal
@@ -59,7 +57,7 @@ final class Style
     public function __construct(ConsoleOutputInterface $output)
     {
         if (! $output instanceof ConsoleOutput) {
-            throw new ShouldNotHappen();
+            throw new ShouldNotHappen;
         }
 
         $this->terminal = terminal();
@@ -177,7 +175,7 @@ final class Style
 
         array_map(function (TestResult $testResult): void {
             if (! $testResult->throwable instanceof Throwable) {
-                throw new ShouldNotHappen();
+                throw new ShouldNotHappen;
             }
 
             renderUsing($this->output);
@@ -342,7 +340,7 @@ final class Style
      */
     public function writeError(Throwable $throwable): void
     {
-        $writer = (new Writer())->setOutput($this->output);
+        $writer = (new Writer)->setOutput($this->output);
 
         $throwable = new TestException($throwable, $this->output->isVerbose());
 
@@ -475,8 +473,8 @@ final class Style
         /** @var string $description */
         $description = preg_replace('/`([^`]+)`/', '<span class="text-white">$1</span>', $description);
 
-        if (class_exists(\Pest\Collision\Events::class)) {
-            $description = \Pest\Collision\Events::beforeTestMethodDescription($result, $description);
+        if (class_exists(Events::class)) {
+            $description = Events::beforeTestMethodDescription($result, $description);
         }
 
         renderUsing($this->output);
@@ -488,7 +486,7 @@ final class Style
             </div>
         HTML, $seconds === '' ? '' : 'flex space-x-1 justify-between', $truncateClasses, $result->color, $result->icon, $description, $warning, $seconds));
 
-        class_exists(\Pest\Collision\Events::class) && \Pest\Collision\Events::afterTestMethodDescription($result);
+        class_exists(Events::class) && Events::afterTestMethodDescription($result);
     }
 
     /**

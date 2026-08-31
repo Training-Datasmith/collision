@@ -16,7 +16,7 @@ class ProviderTest extends TestCase
     #[Test]
     public function it_registers_the_error_handler(): void
     {
-        $handler = new Handler();
+        $handler = new Handler;
 
         $runMock = $this->createMock(RunInterface::class);
 
@@ -34,8 +34,8 @@ class ProviderTest extends TestCase
     #[Test]
     public function it_gets_the_handler(): void
     {
-        $handler = new Handler();
-        $provider = new Provider(new Run(), $handler);
+        $handler = new Handler;
+        $provider = new Provider(new Run, $handler);
 
         $this->assertEquals($provider->getHandler(), $handler);
     }

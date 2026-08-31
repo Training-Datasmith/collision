@@ -25,9 +25,5 @@ return Application::configure(dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         // channels: __DIR__.'/../routes/channels.php',
     )
-    ->withMiddleware(function (Middleware $middleware) {
-
-    })
-    ->withExceptions(function (Exceptions $exceptions) {
-
-    })->create();
+    ->withMiddleware(function (Middleware $middleware) {})
+    ->withExceptions(function (Exceptions $exceptions) {})->create();
