@@ -82,5 +82,6 @@
             "@test:unit:phpunit",
             "@test:unit:pest"
         ]
-    }
+    },
+    "version": "8.x-dev"
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use NunoMaduro\Collision\Adapters\Laravel\Exceptions\RequirementsException;
 use NunoMaduro\Collision\Coverage;
 use ParaTest\Options;
+use ParaTest\ParaTestCommand;
 use RuntimeException;
 use SebastianBergmann\Environment\Console;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -184,7 +185,7 @@ class TestCommand extends Command
             $arguments[] = '--colors=always';
         } elseif ($this->option('no-ansi')) {
             $arguments[] = '--colors=never';
-        } elseif ((new Console())->hasColorSupport()) {
+        } elseif ((new Console)->hasColorSupport()) {
             $arguments[] = '--colors=always';
         }
 
@@ -265,7 +266,7 @@ class TestCommand extends Command
             "--runner=\Illuminate\Testing\ParallelRunner",
         ], $options);
 
-        $inputDefinition = new InputDefinition();
+        $inputDefinition = new InputDefinition;
         Options::setInputDefinition($inputDefinition);
         $input = new ArgvInput($options, $inputDefinition);
 
@@ -363,7 +364,7 @@ class TestCommand extends Command
 
         $vars = [];
 
-        foreach ((new Parser())->parse($content) as $entry) {
+        foreach ((new Parser)->parse($content) as $entry) {
             $vars[] = $entry->getName();
         }
 
@@ -377,6 +378,6 @@ class TestCommand extends Command
      */
     protected function isParallelDependenciesInstalled()
     {
-        return class_exists(\ParaTest\ParaTestCommand::class);
+        return class_exists(ParaTestCommand::class);
     }
 }
